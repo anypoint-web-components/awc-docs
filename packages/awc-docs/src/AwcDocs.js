@@ -183,6 +183,8 @@ export class AwcDocs extends routerLinkMixin(routerMixin(LitElement)) {
         :host {
           min-height: 100vh;
           --dark-divider-opacity: 0.12;
+          display: flex;
+          flex-direction: column;
         }
 
         a {
@@ -214,6 +216,7 @@ export class AwcDocs extends routerLinkMixin(routerMixin(LitElement)) {
           display: flex;
           align-items: stretch;
           flex-direction: row;
+          flex: 1;
         }
 
         anypoint-listbox[role='menu'] {
