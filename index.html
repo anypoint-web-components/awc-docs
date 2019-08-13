@@ -1,0 +1,52 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <meta name="Description" content="Put your description here.">
+  <base href="/">
+  <style>
+    html, body {
+      font-size: 15px;
+      line-height: 20px;
+      margin: 0;
+      padding: 0;
+      font-family: 'Roboto', 'Noto', sans-serif;
+      background-color: #fff;
+      color: #5f6368;
+    }
+
+    body.styled {
+      --primary-color: #00A2DF;
+      --accent-color: rgb(33, 150, 243);
+      --arc-font-body1-font-size: 14px;
+      --arc-font-body1-font-weight: 400;
+      --arc-font-body1-line-height: 20px;
+      --arc-font-code-family: 'Roboto Mono', 'Consolas', 'Menlo', monospace;
+      --code-background-color: #f5f2f0;
+    }
+
+    body.styled.dark {
+      background-color: #424242;
+      height: 100vh;
+      color: #fff;
+      --primary-color: #2196f3;
+      --primary-text-color: #fff;
+      --paper-toggle-button-label-color: #fff;
+      --primary-background-color: #424242;
+      --secondary-text-color: #616161;
+      --arc-interactive-demo-options-color: #F5F5F5;
+      --error-color: #FF5722;
+    }
+  </style>
+  <title>Anypoint Web Components</title>
+  <script src="node_modules/web-animations-js/web-animations-next.min.js"></script>
+</head>
+
+<body class="styled">
+  <awc-docs></awc-docs>
+  <script type="module" src="./packages/awc-docs/awc-docs.js"></script>
+</body>
+
+</html>
