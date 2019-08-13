@@ -37,7 +37,7 @@ spec:
           secretName: awc-www-key
       containers:
       - name: awc-www
-        image: gcr.io/anypoint-wc/awc-www:1.0.0
+        image: gcr.io/anypoint-wc/awc-www:0.1.0
         volumeMounts:
         - name: google-cloud-key
           mountPath: /var/secrets/google

@@ -16,38 +16,47 @@ const defaultTitle = 'Anypoint Web Components';
 
 export class AwcDocs extends routerLinkMixin(routerMixin(LitElement)) {
   static get routes() {
-    return [{
+    return [
+      {
         name: 'intro',
         pattern: '/(intro)?',
-        data: { title: defaultTitle }
-    }, {
+        data: { title: defaultTitle },
+      },
+      {
         name: 'intro',
         pattern: '',
-        data: { title: defaultTitle }
-    }, {
+        data: { title: defaultTitle },
+      },
+      {
         name: 'button',
         pattern: 'button',
-        data: { title: 'Anypoint Button' }
-    }, {
+        data: { title: 'Anypoint Button' },
+      },
+      {
         name: 'input',
         pattern: 'input',
-        data: { title: 'Anypoint Text Field' }
-    }, {
+        data: { title: 'Anypoint Text Field' },
+      },
+      {
         name: 'dropdown-menu',
         pattern: 'dropdown-menu',
-        data: { title: 'Anypoint Dropdown Menu' }
-    }, {
+        data: { title: 'Anypoint Dropdown Menu' },
+      },
+      {
         name: 'listbox',
         pattern: 'listbox',
-        data: { title: 'Anypoint Listbox' }
-    }, {
+        data: { title: 'Anypoint Listbox' },
+      },
+      {
         name: 'item',
         pattern: 'item',
-        data: { title: 'Anypoint Item' }
-    }, {
+        data: { title: 'Anypoint Item' },
+      },
+      {
         name: 'not-found',
-        pattern: '*'
-    }];
+        pattern: '*',
+      },
+    ];
   }
 
   static get properties() {
@@ -77,17 +86,29 @@ export class AwcDocs extends routerLinkMixin(routerMixin(LitElement)) {
   _renderPage() {
     switch (this.page) {
       case 'intro':
-        return html`<page-main></page-main>`;
+        return html`
+          <page-main></page-main>
+        `;
       case 'button':
-        return html`<page-button></page-button>`;
+        return html`
+          <page-button></page-button>
+        `;
       case 'input':
-        return html`<page-input></page-input>`;
+        return html`
+          <page-input></page-input>
+        `;
       case 'dropdown-menu':
-        return html`<page-dropdown-menu></page-dropdown-menu>`;
+        return html`
+          <page-dropdown-menu></page-dropdown-menu>
+        `;
       case 'listbox':
-        return html`<page-listbox></page-listbox>`;
+        return html`
+          <page-listbox></page-listbox>
+        `;
       case 'item':
-        return html`<page-item></page-item>`;
+        return html`
+          <page-item></page-item>
+        `;
       default:
         return html`
           <p>Page not found try going to <a href="/intro">main page</a></p>
@@ -99,7 +120,7 @@ export class AwcDocs extends routerLinkMixin(routerMixin(LitElement)) {
     ev.preventDefault();
     let { target } = ev;
     if (target.localName === 'anypoint-item') {
-      target = target.parentNode;
+      [target] = target.children;
     }
     if (!target.href) {
       return;
@@ -118,20 +139,23 @@ export class AwcDocs extends routerLinkMixin(routerMixin(LitElement)) {
       ['/input', 'input', 'Anypoint Text Filed', 'Activate for Anypoint Text Field documentation'],
       ['/item', 'item', 'Anypoint Item', 'Activate for Anypoint Item documentation'],
       ['/listbox', 'listbox', 'Anypoint Listbox', 'Activate for Anypoint Listbox documentation'],
-      ['/dropdown-menu', 'dropdown-menu', 'Anypoint Dropdown Menu', 'Activate for Anypoint Dropdown Menu documentation']
+      [
+        '/dropdown-menu',
+        'dropdown-menu',
+        'Anypoint Dropdown Menu',
+        'Activate for Anypoint Dropdown Menu documentation',
+      ],
     ];
 
-    return states.map(([href, route, label, ariaLabel]) => html`<a
-      href="${href}"
-      @click="${this.__clickPageLink}"
-      tabindex="-1"
-      route="${route}"
-      role="menuitem"
-      aria-label="${ariaLabel}">
-      <anypoint-item role="none" tabindex="-1">
-        ${label}
-      </anypoint-item>
-    </a>`);
+    return states.map(
+      ([href, route, label, ariaLabel]) => html`
+        <anypoint-item role="none" tabindex="-1" @click="${this.__clickPageLink}" route="${route}">
+          <a href="${href}" tabindex="-1" role="menuitem" aria-label="${ariaLabel}">
+            ${label}
+          </a>
+        </anypoint-item>
+      `,
+    );
   }
 
   render() {
@@ -164,22 +188,25 @@ export class AwcDocs extends routerLinkMixin(routerMixin(LitElement)) {
         a {
           text-decoration: none;
           color: inherit;
+          outline: none;
         }
 
+        a[role='menuitem'] {
+          font-size: 0.85rem;
+        }
 
         header {
           padding: 12px 24px;
-          background-color: #2196F3;
+          background-color: #2196f3;
           color: #000;
           display: flex;
           align-items: center;
         }
 
-
         header h1 {
           font-size: 24px;
           font-weight: 400;
-          letter-spacing: -.012em;
+          letter-spacing: -0.012em;
           line-height: 32px;
         }
 
@@ -189,10 +216,14 @@ export class AwcDocs extends routerLinkMixin(routerMixin(LitElement)) {
           flex-direction: row;
         }
 
-        anypoint-listbox[role="menu"] {
+        anypoint-listbox[role='menu'] {
           width: 256px;
           margin-right: 12px;
           height: 100%;
+        }
+
+        anypoint-listbox[role='menu'] anypoint-item {
+          min-height: 32px;
         }
 
         main {

@@ -10,7 +10,7 @@ metadata:
     app: awc-www
 spec:
   rules:
-  - host: advancedrestclient.com
+  - host: awc.dev
     http:
       paths:
       - backend:

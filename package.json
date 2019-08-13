@@ -1,5 +1,12 @@
 {
+  "name": "awc-docs",
+  "version": "0.1.0",
+  "description": "Documentation website for OSS Anypont Web Components",
+  "author": "Pawel Psztyc",
+  "license": "Apache-2.0",
   "scripts": {
+    "start": "node ${SCRIPT:-app.js}",
+    "start-dev": "es-dev-server --app-index index.html --node-resolve --open --watch",
     "lint:eslint": "eslint --ext .js,.html . --ignore-path .gitignore",
     "format:eslint": "eslint --ext .js,.html . --fix --ignore-path .gitignore",
     "lint:prettier": "prettier \"**/*.js\" --check --ignore-path .gitignore",
@@ -17,23 +24,28 @@
     "storybook:build": "build-storybook -o _site -s storybook-static",
     "start:build": "cd dist && es-dev-server --open",
     "build": "rimraf dist && rollup -c rollup.config.js",
-    "start": "es-dev-server --app-index index.html --node-resolve --open --watch",
-    "start:compatibility": "es-dev-server --app-index index.html --compatibility all --node-resolve --open --watch"
+    "start:compatibility": "es-dev-server --app-index index.html --compatibility all --node-resolve --open --watch",
+    "gke:build": "docker build -t gcr.io/anypoint-wc/awc-www:$npm_package_version .",
+    "gke:deploy": "docker -- push gcr.io/anypoint-wc/awc-www:$npm_package_version",
+    "gke:deploy-config": "kubectl apply -f deployment.yaml",
+    "gke:deploy-ingress": "kubectl apply -f app-ingress.yaml"
   },
   "devDependencies": {
+    "@open-wc/building-rollup": "^0.9.0",
+    "@open-wc/demoing-storybook": "^0.3.0",
     "@open-wc/eslint-config": "^1.0.0",
     "@open-wc/prettier-config": "^0.1.10",
+    "@open-wc/testing": "^0.11.1",
+    "@open-wc/testing-karma": "^3.0.0",
+    "@open-wc/testing-karma-bs": "^1.0.0",
+    "es-dev-server": "^1.5.0",
+    "eslint-config-google": "^0.13.0",
     "husky": "^1.0.0",
     "lint-staged": "^8.0.0",
-    "@open-wc/testing-karma": "^3.0.0",
-    "webpack-merge": "^4.1.5",
-    "@open-wc/testing-karma-bs": "^1.0.0",
-    "@open-wc/testing": "^0.11.1",
-    "@open-wc/demoing-storybook": "^0.3.0",
-    "@open-wc/building-rollup": "^0.9.0",
     "rimraf": "^2.6.3",
     "rollup": "^1.15.4",
-    "es-dev-server": "^1.5.0"
+    "rollup-plugin-cpy": "^2.0.1",
+    "webpack-merge": "^4.1.5"
   },
   "eslintConfig": {
     "extends": [
@@ -54,27 +66,30 @@
       "git add"
     ]
   },
-  "name": "awc-docs",
-  "version": "0.0.0",
-  "description": "Webcomponent awc-docs following open-wc recommendations",
-  "author": "awc-docs",
-  "license": "MIT",
   "dependencies": {
     "@advanced-rest-client/arc-demo-helper": "^1.0.12",
     "@anypoint-web-components/anypoint-button": "^1.0.2",
     "@anypoint-web-components/anypoint-checkbox": "^1.0.0",
     "@anypoint-web-components/anypoint-dropdown-menu": "^0.1.2",
-    "@anypoint-web-components/anypoint-input": "^0.1.0",
+    "@anypoint-web-components/anypoint-input": "^0.1.1",
     "@anypoint-web-components/anypoint-item": "^1.0.2",
     "@anypoint-web-components/anypoint-listbox": "^1.0.2",
     "@anypoint-web-components/anypoint-radio-button": "^0.1.1",
     "@anypoint-web-components/anypoint-styles": "^1.0.0-preview.1",
     "@anypoint-web-components/validator-mixin": "^1.0.0",
+    "@google-cloud/debug-agent": "^4.0.1",
+    "@google-cloud/logging-winston": "^1.1.1",
+    "@google-cloud/trace-agent": "^4.1.1",
     "@polymer/iron-icon": "^3.0.1",
     "@polymer/iron-icons": "^3.0.1",
     "@polymer/iron-image": "^3.0.2",
+    "compression": "^1.7.4",
+    "express": "^4.17.1",
+    "express-winston": "^3.3.0",
     "lit-element": "^2.0.1",
     "lit-element-router": "^1.2.5",
-    "lit-html": "^1.0.0"
+    "lit-html": "^1.0.0",
+    "nconf": "^0.10.0",
+    "winston": "^3.2.1"
   }
 }

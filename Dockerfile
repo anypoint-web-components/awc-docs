@@ -4,8 +4,7 @@ COPY package*.json ./
 
 RUN npm install --only=production
 
-COPY dist/ /app/
-COPY app.js /app/
-COPY config.js /app/
+COPY . .
 
+EXPOSE 8080
 CMD [ "npm", "start" ]
