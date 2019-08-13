@@ -7,6 +7,7 @@
   <meta name="Description" content="Documentation for open source anypoint web compoennts.">
   <link type="text/plain" rel="author" href="humans.txt" />
   <base href="/">
+  <title>Anypoint Web Components</title>
   <style>
     html, body {
       font-size: 15px;
@@ -41,7 +42,23 @@
       --error-color: #FF5722;
     }
   </style>
-  <title>Anypoint Web Components</title>
+
+  <!-- Global site tag (gtag.js) - Google Analytics -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=UA-145656779-1"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag() {
+      const { origin } = window.location;
+      if (origin && origin.indexOf('localhost') !== -1) {
+        return;
+      }
+      /* eslint prefer-rest-params: 0 */
+      window.dataLayer.push(arguments);
+    }
+    const GAID = 'UA-145656779-1';
+    gtag('js', new Date());
+    gtag('config', GAID);
+  </script>
 </head>
 
 <body class="styled">

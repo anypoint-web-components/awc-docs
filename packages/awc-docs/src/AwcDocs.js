@@ -13,6 +13,9 @@ import '../../page-listbox/page-listbox.js';
 import '../../page-item/page-item.js';
 
 const defaultTitle = 'Anypoint Web Components';
+const gaId = 'UA-145656779-1';
+
+/* global gtag */
 
 export class AwcDocs extends routerLinkMixin(routerMixin(LitElement)) {
   static get routes() {
@@ -81,6 +84,12 @@ export class AwcDocs extends routerLinkMixin(routerMixin(LitElement)) {
     this.title = title;
     this.page = finalRoute;
     document.head.querySelector('title').innerText = title;
+    if (!this.__gaRouteInitialized) {
+      // prohibits sending pageview when initializing
+      this.__gaRouteInitialized = true;
+      return;
+    }
+    gtag('config', gaId, { page_path: `/${route}` });
   }
 
   _renderPage() {

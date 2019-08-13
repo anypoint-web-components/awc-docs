@@ -1,7 +1,7 @@
 import { html, css, LitElement } from 'lit-element';
 import { headersStyles } from '../awc-docs/src/common-styles.js';
 /* eslint class-methods-use-this: 0 */
-
+/* global gtag */
 /**
  * Base class for AWC demo pages.
  *
@@ -24,17 +24,21 @@ export class DemoPage extends LitElement {
     return [
       headersStyles,
       css`
-      :host {
-        display: block;
-      }
-    `];
+        :host {
+          display: block;
+        }
+      `,
+    ];
   }
 
   constructor() {
     super();
 
     this.initObservableProperties([
-      'narrowActive', 'componentName', 'stylesActive', 'darkThemeActive'
+      'narrowActive',
+      'componentName',
+      'stylesActive',
+      'darkThemeActive',
     ]);
 
     this.narrowActive = false;
@@ -47,7 +51,7 @@ export class DemoPage extends LitElement {
    * @param {Array<String>} props List of properties to initialize.
    */
   initObservableProperties(props) {
-    props.forEach((item) => {
+    props.forEach(item => {
       Object.defineProperty(this, item, {
         get() {
           return this[`_${item}`];
@@ -56,7 +60,7 @@ export class DemoPage extends LitElement {
           this._setObservableProperty(item, newValue);
         },
         enumerable: true,
-        configurable: true
+        configurable: true,
       });
     });
   }
@@ -93,6 +97,20 @@ export class DemoPage extends LitElement {
     }
   }
 
+  notifyStateChange(state, action = 'change') {
+    gtag('event', action, {
+      event_category: 'interactive-demo-state',
+      event_label: state,
+    });
+  }
+
+  notifyOptionChange(label, action = 'activate') {
+    gtag('event', action, {
+      event_category: 'interactive-demo-option',
+      event_label: label,
+    });
+  }
+
   /**
    * Abstract method. When not overriding `render()` method you can use
    * this function to render content inside the standar API components layout.
@@ -103,11 +121,11 @@ export class DemoPage extends LitElement {
    * }
    * ```
    */
-  contentTemplate() { }
+  contentTemplate() {}
 
   render() {
     return html`
-    ${this.contentTemplate()}
+      ${this.contentTemplate()}
     `;
   }
 }

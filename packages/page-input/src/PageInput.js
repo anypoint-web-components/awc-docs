@@ -21,10 +21,7 @@ import templateCustomValidation from './templateCw.js';
 
 export class PageInput extends DemoPage {
   static get styles() {
-    return [
-      demoContentStyles,
-      headersStyles
-    ];
+    return [demoContentStyles, headersStyles];
   }
 
   constructor() {
@@ -42,22 +39,13 @@ export class PageInput extends DemoPage {
       'textAreaOutlined',
       'textAreaLegacy',
       'textAreaInfo',
-      'textAreaError'
+      'textAreaError',
     ]);
 
     this.textFieldStates = ['Normal', 'Outlined', 'Legacy'];
     this.textFieldLegacy = false;
     this.textFieldOutlined = false;
     this.typeSelector = 'text';
-  }
-
-  _readonlyHandler(e) {
-    this.readonly = e.target.checked;
-  }
-
-  _valueHandler(e) {
-    const prop = e.target.dataset.target;
-    this[prop] = e.detail.value;
   }
 
   _formSubmit(e) {
@@ -75,48 +63,62 @@ export class PageInput extends DemoPage {
 
   _textFiledStateHandler(e) {
     const state = e.detail.value;
+    let gaValue;
     switch (state) {
       case 0:
         this.textFieldOutlined = false;
         this.textFieldLegacy = false;
+        gaValue = 'normal';
         break;
       case 1:
         this.textFieldOutlined = true;
         this.textFieldLegacy = false;
+        gaValue = 'outlined';
         break;
       case 2:
         this.textFieldOutlined = false;
         this.textFieldLegacy = true;
+        gaValue = 'legacy';
         break;
       default:
+        gaValue = 'default';
     }
+    this.notifyStateChange(gaValue, 'main-demo-change');
   }
 
   _textAreaStateHandler(e) {
     const state = e.detail.value;
+    let gaValue;
     switch (state) {
       case 0:
         this.textAreaOutlined = false;
         this.textAreaLegacy = false;
+        gaValue = 'normal';
         break;
       case 1:
         this.textAreaOutlined = true;
         this.textAreaLegacy = false;
+        gaValue = 'outlined';
         break;
       case 2:
         this.textAreaOutlined = false;
         this.textAreaLegacy = true;
+        gaValue = 'legacy';
         break;
       default:
+        gaValue = 'default';
     }
+    this.notifyStateChange(gaValue, 'textarea-demo-change');
   }
 
   _textFiledLeadingHandler(e) {
     this.textFiledLeading = e.target.checked;
+    this.notifyOptionChange('leadingIcon');
   }
 
   _textFiledTrailingHandler(e) {
     this.textFiledTrailing = e.target.checked;
+    this.notifyOptionChange('trailingIcon');
   }
 
   _textFiledAssistiveHandler(e) {
@@ -134,6 +136,7 @@ export class PageInput extends DemoPage {
       this.textFieldError = false;
       this.textFieldInfo = false;
     }
+    this.notifyOptionChange(name, 'text-field-activate');
   }
 
   _textAreaAssistiveHandler(e) {
@@ -151,6 +154,7 @@ export class PageInput extends DemoPage {
       this.textAreaError = false;
       this.textAreaInfo = false;
     }
+    this.notifyOptionChange(name, 'text-area-activate');
   }
 
   _textFiledTypeHandler(e) {
@@ -159,6 +163,7 @@ export class PageInput extends DemoPage {
       return;
     }
     this.typeSelector = name;
+    this.notifyOptionChange(name, 'text-field-type');
   }
 
   _headerControlsTemplate() {
@@ -181,15 +186,14 @@ export class PageInput extends DemoPage {
       textFiledLeading,
       textFiledTrailing,
       textFieldInfo,
-      textFieldError
+      textFieldError,
     } = this;
     const infoMessage = textFieldInfo ? 'Assistive text label' : undefined;
     return html`
       <section class="documentation-section">
         <h3>Interactive demo</h3>
         <p>
-          This demo lets you preview the text field element with various
-          configuration options.
+          This demo lets you preview the text field element with various configuration options.
         </p>
         <arc-interactive-demo
           .states="${textFieldStates}"
@@ -207,11 +211,13 @@ export class PageInput extends DemoPage {
               ?invalid="${textFieldError}"
             >
               <label slot="label">Label</label>
-              ${textFiledLeading ? html`
+              ${textFiledLeading
+                ? html`
                     <iron-icon icon="lock-outline" slot="prefix"></iron-icon>
                   `
                 : undefined}
-              ${textFiledTrailing ? html`
+              ${textFiledTrailing
+                ? html`
                     <iron-icon icon="clear" slot="suffix"></iron-icon>
                   `
                 : undefined}
@@ -238,20 +244,13 @@ export class PageInput extends DemoPage {
             selectable="anypoint-radio-button"
             aria-labelledby="mainAssistiveLabel"
           >
-            <anypoint-radio-button
-              @change="${this._textFiledAssistiveHandler}"
-              checked
-              name="none"
+            <anypoint-radio-button @change="${this._textFiledAssistiveHandler}" checked name="none"
               >None</anypoint-radio-button
             >
-            <anypoint-radio-button
-              @change="${this._textFiledAssistiveHandler}"
-              name="info"
+            <anypoint-radio-button @change="${this._textFiledAssistiveHandler}" name="info"
               >Info message</anypoint-radio-button
             >
-            <anypoint-radio-button
-              @change="${this._textFiledAssistiveHandler}"
-              name="error"
+            <anypoint-radio-button @change="${this._textFiledAssistiveHandler}" name="error"
               >Error text</anypoint-radio-button
             >
           </anypoint-radio-group>
@@ -266,7 +265,7 @@ export class PageInput extends DemoPage {
       textFieldOutlined,
       textFieldLegacy,
       darkThemeActive,
-      typeSelector
+      typeSelector,
     } = this;
     return html`
       <section class="documentation-section">
@@ -298,75 +297,46 @@ export class PageInput extends DemoPage {
             selectable="anypoint-radio-button"
             aria-labelledby="typesLabel"
           >
-            <anypoint-radio-button
-              @change="${this._textFiledTypeHandler}"
-              checked
-              name="text"
+            <anypoint-radio-button @change="${this._textFiledTypeHandler}" checked name="text"
               >Text</anypoint-radio-button
             >
-            <anypoint-radio-button
-              @change="${this._textFiledTypeHandler}"
-              name="number"
+            <anypoint-radio-button @change="${this._textFiledTypeHandler}" name="number"
               >Number</anypoint-radio-button
             >
-            <anypoint-radio-button
-              @change="${this._textFiledTypeHandler}"
-              name="password"
+            <anypoint-radio-button @change="${this._textFiledTypeHandler}" name="password"
               >Password</anypoint-radio-button
             >
-            <anypoint-radio-button
-              @change="${this._textFiledTypeHandler}"
-              name="date"
+            <anypoint-radio-button @change="${this._textFiledTypeHandler}" name="date"
               >Date</anypoint-radio-button
             >
-            <anypoint-radio-button
-              @change="${this._textFiledTypeHandler}"
-              name="time"
+            <anypoint-radio-button @change="${this._textFiledTypeHandler}" name="time"
               >Time</anypoint-radio-button
             >
-            <anypoint-radio-button
-              @change="${this._textFiledTypeHandler}"
-              name="datetime-local"
+            <anypoint-radio-button @change="${this._textFiledTypeHandler}" name="datetime-local"
               >Datetime-local</anypoint-radio-button
             >
-            <anypoint-radio-button
-              @change="${this._textFiledTypeHandler}"
-              name="month"
+            <anypoint-radio-button @change="${this._textFiledTypeHandler}" name="month"
               >Month</anypoint-radio-button
             >
-            <anypoint-radio-button
-              @change="${this._textFiledTypeHandler}"
-              name="week"
+            <anypoint-radio-button @change="${this._textFiledTypeHandler}" name="week"
               >Week</anypoint-radio-button
             >
-            <anypoint-radio-button
-              @change="${this._textFiledTypeHandler}"
-              name="color"
+            <anypoint-radio-button @change="${this._textFiledTypeHandler}" name="color"
               >Color</anypoint-radio-button
             >
-            <anypoint-radio-button
-              @change="${this._textFiledTypeHandler}"
-              name="email"
+            <anypoint-radio-button @change="${this._textFiledTypeHandler}" name="email"
               >Email</anypoint-radio-button
             >
-            <anypoint-radio-button
-              @change="${this._textFiledTypeHandler}"
-              name="url"
+            <anypoint-radio-button @change="${this._textFiledTypeHandler}" name="url"
               >URL</anypoint-radio-button
             >
-            <anypoint-radio-button
-              @change="${this._textFiledTypeHandler}"
-              name="tel"
+            <anypoint-radio-button @change="${this._textFiledTypeHandler}" name="tel"
               >Tel</anypoint-radio-button
             >
-            <anypoint-radio-button
-              @change="${this._textFiledTypeHandler}"
-              name="search"
+            <anypoint-radio-button @change="${this._textFiledTypeHandler}" name="search"
               >Search</anypoint-radio-button
             >
-            <anypoint-radio-button
-              @change="${this._textFiledTypeHandler}"
-              name="file"
+            <anypoint-radio-button @change="${this._textFiledTypeHandler}" name="file"
               >File</anypoint-radio-button
             >
           </anypoint-radio-group>
@@ -382,83 +352,72 @@ export class PageInput extends DemoPage {
       textAreaInfo,
       textAreaOutlined,
       textAreaLegacy,
-      textAreaError
+      textAreaError,
     } = this;
     const infoMessage = textAreaInfo ? 'Assistive text label' : undefined;
-    return html`<section class="documentation-section">
-      <h3>Text area field</h3>
-      <p>
-        Text area field focuses user attention on entering more complex text input.
-      </p>
+    return html`
+      <section class="documentation-section">
+        <h3>Text area field</h3>
+        <p>
+          Text area field focuses user attention on entering more complex text input.
+        </p>
 
-      <p>
-        It does not accept prefixes and suffixes as the user needs an space to
-        imput the value.
-      </p>
+        <p>
+          It does not accept prefixes and suffixes as the user needs an space to imput the value.
+        </p>
 
-      <arc-interactive-demo
-        .states="${textFieldStates}"
-        @state-chanegd="${this._textAreaStateHandler}"
-        ?dark="${darkThemeActive}"
-      >
-        <section slot="content">
-          <anypoint-textarea
-            name="main"
-            title="Text field"
-            ?outlined="${textAreaOutlined}"
-            ?legacy="${textAreaLegacy}"
-            .infoMessage="${infoMessage}"
-            invalidmessage="This value is invalid"
-            ?invalid="${textAreaError}"
-          >
-            <label slot="label">Label</label>
-          </anypoint-textarea>
-        </section>
-
-        <label slot="options" id="areaAssistiveLabel">Assistive text</label>
-        <anypoint-radio-group
-          slot="options"
-          selectable="anypoint-radio-button"
-          aria-labelledby="areaAssistiveLabel"
+        <arc-interactive-demo
+          .states="${textFieldStates}"
+          @state-chanegd="${this._textAreaStateHandler}"
+          ?dark="${darkThemeActive}"
         >
-          <anypoint-radio-button
-            @change="${this._textAreaAssistiveHandler}"
-            checked
-            name="none"
-            >None</anypoint-radio-button
+          <section slot="content">
+            <anypoint-textarea
+              name="main"
+              title="Text field"
+              ?outlined="${textAreaOutlined}"
+              ?legacy="${textAreaLegacy}"
+              .infoMessage="${infoMessage}"
+              invalidmessage="This value is invalid"
+              ?invalid="${textAreaError}"
+            >
+              <label slot="label">Label</label>
+            </anypoint-textarea>
+          </section>
+
+          <label slot="options" id="areaAssistiveLabel">Assistive text</label>
+          <anypoint-radio-group
+            slot="options"
+            selectable="anypoint-radio-button"
+            aria-labelledby="areaAssistiveLabel"
           >
-          <anypoint-radio-button
-            @change="${this._textAreaAssistiveHandler}"
-            name="info"
-            >Info message</anypoint-radio-button
-          >
-          <anypoint-radio-button
-            @change="${this._textAreaAssistiveHandler}"
-            name="error"
-            >Error text</anypoint-radio-button
-          >
-        </anypoint-radio-group>
-      </arc-interactive-demo>
-      <h3>Positioning</h3>
-      <p>
-        Text area field should be the only element in a row.
-        The user may choose to resize the text area using native resize control.
-        You should not make that decission on behalf of the user.
-        Additional UI widgets placed aside of the text area may obscure the view
-        and make providing input harder to some users.
-      </p>
-      </section>`;
+            <anypoint-radio-button @change="${this._textAreaAssistiveHandler}" checked name="none"
+              >None</anypoint-radio-button
+            >
+            <anypoint-radio-button @change="${this._textAreaAssistiveHandler}" name="info"
+              >Info message</anypoint-radio-button
+            >
+            <anypoint-radio-button @change="${this._textAreaAssistiveHandler}" name="error"
+              >Error text</anypoint-radio-button
+            >
+          </anypoint-radio-group>
+        </arc-interactive-demo>
+        <h3>Positioning</h3>
+        <p>
+          Text area field should be the only element in a row. The user may choose to resize the
+          text area using native resize control. You should not make that decission on behalf of the
+          user. Additional UI widgets placed aside of the text area may obscure the view and make
+          providing input harder to some users.
+        </p>
+      </section>
+    `;
   }
 
   contentTemplate() {
     return html`
       <h2>Anypoint text field</h2>
-      ${this._demoTemplate()}
-      ${templateIntroduction}
-      ${templateUsage}
-      ${this._typesTemplate()}
-      ${templateCustomValidation}
-      ${this._texareaTemplate()}
+      ${this._demoTemplate()} ${templateIntroduction} ${templateUsage} ${this._typesTemplate()}
+      ${templateCustomValidation} ${this._texareaTemplate()}
     `;
   }
 }
