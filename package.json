@@ -80,6 +80,7 @@
     "@google-cloud/debug-agent": "^4.0.1",
     "@google-cloud/logging-winston": "^1.1.1",
     "@google-cloud/trace-agent": "^4.1.1",
+    "@polymer/iron-form": "^3.0.1",
     "@polymer/iron-icon": "^3.0.1",
     "@polymer/iron-icons": "^3.0.1",
     "@polymer/iron-image": "^3.0.2",
