@@ -11,6 +11,7 @@ import '../../page-input/page-input.js';
 import '../../page-dropdown-menu/page-dropdown-menu.js';
 import '../../page-listbox/page-listbox.js';
 import '../../page-item/page-item.js';
+import '../../page-radio-button/page-radio-button.js';
 
 const defaultTitle = 'Anypoint Web Components';
 const gaId = 'UA-145656779-1';
@@ -54,6 +55,11 @@ export class AwcDocs extends routerLinkMixin(routerMixin(LitElement)) {
         name: 'item',
         pattern: 'item',
         data: { title: 'Anypoint Item' },
+      },
+      {
+        name: 'radio-button',
+        pattern: 'radio-button',
+        data: { title: 'Anypoint Radio Button' },
       },
       {
         name: 'not-found',
@@ -118,6 +124,10 @@ export class AwcDocs extends routerLinkMixin(routerMixin(LitElement)) {
         return html`
           <page-item></page-item>
         `;
+      case 'radio-button':
+        return html`
+          <page-radio-button></page-radio-button>
+        `;
       default:
         return html`
           <p>Page not found try going to <a href="/intro">main page</a></p>
@@ -154,6 +164,7 @@ export class AwcDocs extends routerLinkMixin(routerMixin(LitElement)) {
         'Anypoint Dropdown Menu',
         'Activate for Anypoint Dropdown Menu documentation',
       ],
+      ['/radio-button', 'radio-button', 'Anypoint Radio Button', 'Activate for Anypoint Radio Button documentation'],
     ];
 
     return states.map(
