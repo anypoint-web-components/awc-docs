@@ -6,7 +6,7 @@
   "license": "Apache-2.0",
   "scripts": {
     "start": "node ${SCRIPT:-app.js}",
-    "start-dev": "es-dev-server --app-index index.html --node-resolve --open --watch",
+    "start:dev": "es-dev-server --app-index index.html --node-resolve --open --watch",
     "lint:eslint": "eslint --ext .js,.html . --ignore-path .gitignore",
     "format:eslint": "eslint --ext .js,.html . --fix --ignore-path .gitignore",
     "lint:prettier": "prettier \"**/*.js\" --check --ignore-path .gitignore",
