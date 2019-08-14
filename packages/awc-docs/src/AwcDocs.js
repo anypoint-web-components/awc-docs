@@ -144,7 +144,7 @@ export class AwcDocs extends routerLinkMixin(routerMixin(LitElement)) {
   _navTemplate() {
     const states = [
       ['/intro', 'intro', 'Introduction', 'Activate for introduction page'],
-      ['/button', 'button', 'Anypoint button', 'Activate for Anypoint Text Field documentation'],
+      ['/button', 'button', 'Anypoint Button', 'Activate for Anypoint Text Field documentation'],
       ['/input', 'input', 'Anypoint Text Filed', 'Activate for Anypoint Text Field documentation'],
       ['/item', 'item', 'Anypoint Item', 'Activate for Anypoint Item documentation'],
       ['/listbox', 'listbox', 'Anypoint Listbox', 'Activate for Anypoint Listbox documentation'],
