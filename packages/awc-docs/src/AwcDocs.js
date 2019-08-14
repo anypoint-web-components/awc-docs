@@ -172,7 +172,7 @@ export class AwcDocs extends routerLinkMixin(routerMixin(LitElement)) {
         'Anypoint Dropdown Menu',
         'Activate for Anypoint Dropdown Menu documentation',
       ],
-      ['/input', 'input', 'Anypoint Text Filed', 'Activate for Anypoint Text Field documentation'],
+      ['/input', 'input', 'Anypoint Text Field', 'Activate for Anypoint Text Field documentation'],
       ['/item', 'item', 'Anypoint Item', 'Activate for Anypoint Item documentation'],
       ['/listbox', 'listbox', 'Anypoint Listbox', 'Activate for Anypoint Listbox documentation'],
       ['/radio-button', 'radio-button', 'Anypoint Radio Button', 'Activate for Anypoint Radio Button documentation'],
