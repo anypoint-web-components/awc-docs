@@ -8,6 +8,7 @@ import '@anypoint-web-components/anypoint-button/anypoint-button.js';
 import '@polymer/iron-icon/iron-icon.js';
 import '@polymer/iron-icons/iron-icons.js';
 import '@anypoint-web-components/anypoint-input/anypoint-input.js';
+import '@anypoint-web-components/anypoint-input/anypoint-masked-input.js';
 import '@anypoint-web-components/anypoint-input/anypoint-textarea.js';
 import { DemoPage } from '../../demo-page/demo-page.js';
 import { demoContentStyles, headersStyles } from '../../awc-docs/src/common-styles.js';
@@ -35,17 +36,33 @@ export class PageInput extends DemoPage {
       'textFiledTrailing',
       'textFieldError',
       'textFieldInfo',
+      'textFiledNoLabelFloat',
       'typeSelector',
       'textAreaOutlined',
       'textAreaLegacy',
       'textAreaInfo',
       'textAreaError',
+      'textAreaNoLabelFloat',
+      'typeFieldOutlined',
+      'typeFieldLegacy',
+      'mainFiledReadOnly',
+      'mainFiledDisabled',
+      'maskedOutlined',
+      'maskedLegacy',
+      'maskedNoLabelFloat',
+      'maskedDisabled',
+      'maskedReadOnly'
     ]);
 
-    this.textFieldStates = ['Normal', 'Outlined', 'Legacy'];
+    this.textFieldStates = ['Filled', 'Outlined', 'Legacy'];
     this.textFieldLegacy = false;
     this.textFieldOutlined = false;
     this.typeSelector = 'text';
+  }
+
+  _toggleMainOption(e) {
+    const { name, checked } = e.target;
+    this[name] = checked;
   }
 
   _formSubmit(e) {
@@ -109,6 +126,31 @@ export class PageInput extends DemoPage {
         gaValue = 'default';
     }
     this.notifyStateChange(gaValue, 'textarea-demo-change');
+  }
+
+  _maskedStateHandler(e) {
+    const state = e.detail.value;
+    let gaValue;
+    switch (state) {
+      case 0:
+        this.maskedOutlined = false;
+        this.maskedLegacy = false;
+        gaValue = 'normal';
+        break;
+      case 1:
+        this.maskedOutlined = true;
+        this.maskedLegacy = false;
+        gaValue = 'outlined';
+        break;
+      case 2:
+        this.maskedOutlined = false;
+        this.maskedLegacy = true;
+        gaValue = 'legacy';
+        break;
+      default:
+        gaValue = 'default';
+    }
+    this.notifyStateChange(gaValue, 'masked-input-demo-change');
   }
 
   _textFiledLeadingHandler(e) {
@@ -185,77 +227,112 @@ export class PageInput extends DemoPage {
       darkThemeActive,
       textFiledLeading,
       textFiledTrailing,
+      textFiledNoLabelFloat,
       textFieldInfo,
       textFieldError,
+      mainFiledReadOnly,
+      mainFiledDisabled
     } = this;
     const infoMessage = textFieldInfo ? 'Assistive text label' : undefined;
     return html`
-      <section class="documentation-section">
-        <h3>Interactive demo</h3>
-        <p>
-          This demo lets you preview the text field element with various configuration options.
-        </p>
-        <arc-interactive-demo
-          .states="${textFieldStates}"
-          @state-chanegd="${this._textFiledStateHandler}"
-          ?dark="${darkThemeActive}"
+    <section class="documentation-section">
+      <h3>Interactive demo</h3>
+      <p>
+        This demo lets you preview the text field element with various
+        configuration options.
+      </p>
+      <arc-interactive-demo
+        .states="${textFieldStates}"
+        @state-chanegd="${this._textFiledStateHandler}"
+        ?dark="${darkThemeActive}"
+      >
+        <anypoint-input
+          slot="content"
+          name="main"
+          title="Text field"
+          ?outlined="${textFieldOutlined}"
+          ?legacy="${textFieldLegacy}"
+          .infoMessage="${infoMessage}"
+          invalidmessage="This value is invalid"
+          ?invalid="${textFieldError}"
+          ?nolabelfloat="${textFiledNoLabelFloat}"
+          ?readOnly="${mainFiledReadOnly}"
+          ?disabled="${mainFiledDisabled}"
         >
-          <section slot="content">
-            <anypoint-input
-              name="main"
-              title="Text field"
-              ?outlined="${textFieldOutlined}"
-              ?legacy="${textFieldLegacy}"
-              .infoMessage="${infoMessage}"
-              invalidmessage="This value is invalid"
-              ?invalid="${textFieldError}"
-            >
-              <label slot="label">Label</label>
-              ${textFiledLeading
-                ? html`
-                    <iron-icon icon="lock-outline" slot="prefix"></iron-icon>
-                  `
-                : undefined}
-              ${textFiledTrailing
-                ? html`
-                    <iron-icon icon="clear" slot="suffix"></iron-icon>
-                  `
-                : undefined}
-            </anypoint-input>
-          </section>
+          <label slot="label">Label</label>
+          ${textFiledLeading ? html`
+                <iron-icon icon="lock-outline" slot="prefix"></iron-icon>
+              `
+            : undefined}
+          ${textFiledTrailing ? html`
+                <iron-icon icon="clear" slot="suffix"></iron-icon>
+              `
+            : undefined}
+        </anypoint-input>
 
-          <label slot="options" id="mainOptionsLabel">Options</label>
-          <anypoint-checkbox
-            aria-describedby="mainOptionsLabel"
-            slot="options"
-            @change="${this._textFiledLeadingHandler}"
-            >Leading icon</anypoint-checkbox
-          >
-          <anypoint-checkbox
-            aria-describedby="mainOptionsLabel"
-            slot="options"
-            @change="${this._textFiledTrailingHandler}"
-            >Trailing icon</anypoint-checkbox
-          >
+        <label slot="options" id="mainOptionsLabel">Options</label>
+        <anypoint-checkbox
+          aria-describedby="mainOptionsLabel"
+          slot="options"
+          name="textFiledLeading"
+          @change="${this._toggleMainOption}"
+          >Leading icon</anypoint-checkbox
+        >
+        <anypoint-checkbox
+          aria-describedby="mainOptionsLabel"
+          slot="options"
+          name="textFiledTrailing"
+          @change="${this._toggleMainOption}"
+          >Trailing icon</anypoint-checkbox
+        >
+        <anypoint-checkbox
+          aria-describedby="mainOptionsLabel"
+          slot="options"
+          name="textFiledNoLabelFloat"
+          @change="${this._toggleMainOption}"
+          >No label float</anypoint-checkbox
+        >
 
-          <label slot="options" id="mainAssistiveLabel">Assistive text</label>
-          <anypoint-radio-group
-            slot="options"
-            selectable="anypoint-radio-button"
-            aria-labelledby="mainAssistiveLabel"
+        <anypoint-checkbox
+          aria-describedby="mainOptionsLabel"
+          slot="options"
+          name="mainFiledDisabled"
+          @change="${this._toggleMainOption}"
+          >Disabled</anypoint-checkbox
+        >
+        <anypoint-checkbox
+          aria-describedby="mainOptionsLabel"
+          slot="options"
+          name="mainFiledReadOnly"
+          @change="${this._toggleMainOption}"
+          >Read only</anypoint-checkbox
+        >
+
+        <label slot="options" id="mainAssistiveLabel">Assistive text</label>
+        <anypoint-radio-group
+          slot="options"
+          selectable="anypoint-radio-button"
+          aria-labelledby="mainAssistiveLabel"
+        >
+          <anypoint-radio-button
+            @change="${this._textFiledAssistiveHandler}"
+            checked
+            name="none"
+            >None</anypoint-radio-button
           >
-            <anypoint-radio-button @change="${this._textFiledAssistiveHandler}" checked name="none"
-              >None</anypoint-radio-button
-            >
-            <anypoint-radio-button @change="${this._textFiledAssistiveHandler}" name="info"
-              >Info message</anypoint-radio-button
-            >
-            <anypoint-radio-button @change="${this._textFiledAssistiveHandler}" name="error"
-              >Error text</anypoint-radio-button
-            >
-          </anypoint-radio-group>
-        </arc-interactive-demo>
-      </section>
+          <anypoint-radio-button
+            @change="${this._textFiledAssistiveHandler}"
+            name="info"
+            >Info message</anypoint-radio-button
+          >
+          <anypoint-radio-button
+            @change="${this._textFiledAssistiveHandler}"
+            name="error"
+            >Error text</anypoint-radio-button
+          >
+        </anypoint-radio-group>
+      </arc-interactive-demo>
+    </section>
     `;
   }
 
@@ -413,11 +490,79 @@ export class PageInput extends DemoPage {
     `;
   }
 
+  _maskedInputTemplate() {
+    const {
+      textFieldStates,
+      darkThemeActive,
+      maskedOutlined,
+      maskedLegacy,
+      maskedNoLabelFloat,
+      maskedDisabled,
+      maskedReadOnly
+    } = this;
+
+    return html`<section class="documentation-section">
+      <h3>Masked inputs</h3>
+      <p>
+        You can mask the input and toggle value visibility by using <code>anypoint-masked-input</code>.
+        The input renders an icon to toggle input's visibility.
+      </p>
+
+      <arc-interactive-demo
+        .states="${textFieldStates}"
+        @state-chanegd="${this._maskedStateHandler}"
+        ?dark="${darkThemeActive}"
+      >
+        <section slot="content">
+          <anypoint-masked-input
+            name="main"
+            title="Text field"
+            ?outlined="${maskedOutlined}"
+            ?legacy="${maskedLegacy}"
+            ?nolabelfloat="${maskedNoLabelFloat}"
+            ?disabled="${maskedDisabled}"
+            ?readOnly="${maskedReadOnly}"
+          >
+            <label slot="label">Label</label>
+          </anypoint-masked-input>
+        </section>
+
+        <label slot="options" id="maskedOptionsLabel">Options</label>
+        <anypoint-checkbox
+          aria-describedby="maskedOptionsLabel"
+          slot="options"
+          name="maskedNoLabelFloat"
+          @change="${this._toggleMainOption}"
+          >No label float</anypoint-checkbox
+        >
+        <anypoint-checkbox
+          aria-describedby="maskedOptionsLabel"
+          slot="options"
+          name="maskedDisabled"
+          @change="${this._toggleMainOption}"
+          >Disabled</anypoint-checkbox
+        >
+        <anypoint-checkbox
+          aria-describedby="maskedOptionsLabel"
+          slot="options"
+          name="maskedReadOnly"
+          @change="${this._toggleMainOption}"
+          >Read only</anypoint-checkbox
+        >
+      </arc-interactive-demo>
+    </section>`;
+  }
+
   contentTemplate() {
     return html`
       <h2>Anypoint text field</h2>
-      ${this._demoTemplate()} ${templateIntroduction} ${templateUsage} ${this._typesTemplate()}
-      ${templateCustomValidation} ${this._texareaTemplate()}
+      ${this._demoTemplate()}
+      ${templateIntroduction}
+      ${templateUsage}
+      ${this._typesTemplate()}
+      ${templateCustomValidation}
+      ${this._texareaTemplate()}
+      ${this._maskedInputTemplate()}
     `;
   }
 }
