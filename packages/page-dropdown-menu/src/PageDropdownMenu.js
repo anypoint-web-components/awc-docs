@@ -1,4 +1,4 @@
-import { html } from 'lit-element';
+import { html, css } from 'lit-element';
 import '@advanced-rest-client/arc-demo-helper/arc-interactive-demo.js';
 import '@polymer/iron-image/iron-image.js';
 import '@anypoint-web-components/anypoint-item/anypoint-item.js';
@@ -18,21 +18,31 @@ const hasFormAssociatedElements = 'attachInternals' in document.createElement('s
 
 export class PageDropdownMenu extends DemoPage {
   static get styles() {
-    return [demoContentStyles, headersStyles];
+    return [
+      demoContentStyles,
+      headersStyles,
+      css`
+        :host {
+          --anypoiont-dropdown-shaddow: 0 4px 5px 0 rgba(0, 0, 0, 0.14),
+            0 1px 10px 0 rgba(0, 0, 0, 0.12), 0 2px 4px -1px rgba(0, 0, 0, 0.4);
+        }
+      `,
+    ];
   }
 
   constructor() {
     super();
     this.initObservableProperties([
       'demoOutlined',
-      'demoLegacy',
+      'demoCompatibility',
       'demoInfo',
       'demoError',
       'demoNoLabelFloat',
       'demoRtl',
       'formFieldsDisabled',
+      'formMenuDisabled',
     ]);
-    this.demoStates = ['Normal', 'Outlined', 'Legacy'];
+    this.demoStates = ['Filled', 'Outlined', 'Anypoint'];
     this.items = [
       'Allosaurus',
       'Brontosaurus',
@@ -61,6 +71,7 @@ export class PageDropdownMenu extends DemoPage {
       'yandusaurus',
       'zephyrosaurus',
     ];
+    this.minItems = ['Allosaurus', 'Brontosaurus', 'Carcharodontosaurus'];
   }
 
   get formData() {
@@ -74,9 +85,14 @@ export class PageDropdownMenu extends DemoPage {
   _formSubmit(e) {
     e.preventDefault();
     const result = {};
-    for (let i = 0; i < e.target.elements.length; i++) {
-      const node = e.target.elements[i];
-      if (!node.name) {
+    const { elements } = e.target;
+    let ignore = [];
+    for (let i = 0; i < elements.length; i++) {
+      const node = elements[i];
+      if (node.localName === 'fieldset' && node.disabled) {
+        ignore = [...ignore, ...elements[0].elements];
+      }
+      if (!node.name || node.disabled || ignore.indexOf(node) !== -1) {
         continue;
       }
       result[node.name] = node.value;
@@ -101,17 +117,17 @@ export class PageDropdownMenu extends DemoPage {
     switch (state) {
       case 0:
         this.demoOutlined = false;
-        this.demoLegacy = false;
+        this.demoCompatibility = false;
         gaValue = 'normal';
         break;
       case 1:
         this.demoOutlined = true;
-        this.demoLegacy = false;
+        this.demoCompatibility = false;
         gaValue = 'outlined';
         break;
       case 2:
         this.demoOutlined = false;
-        this.demoLegacy = true;
+        this.demoCompatibility = true;
         gaValue = 'legacy';
         break;
       default:
@@ -150,7 +166,7 @@ export class PageDropdownMenu extends DemoPage {
       demoStates,
       darkThemeActive,
       demoOutlined,
-      demoLegacy,
+      demoCompatibility,
       demoInfo,
       demoError,
       demoRtl,
@@ -173,7 +189,7 @@ export class PageDropdownMenu extends DemoPage {
             name="mainDemo"
             title="Dropdown menu"
             ?outlined="${demoOutlined}"
-            ?legacy="${demoLegacy}"
+            ?compatibility="${demoCompatibility}"
             .infoMessage="${infoMessage}"
             invalidmessage="This value is invalid"
             ?invalid="${demoError}"
@@ -181,7 +197,11 @@ export class PageDropdownMenu extends DemoPage {
             ?noLabelFloat="${demoNoLabelFloat}"
           >
             <label slot="label">Select a dinosaur</label>
-            <anypoint-listbox slot="dropdown-content" tabindex="-1">
+            <anypoint-listbox
+              slot="dropdown-content"
+              tabindex="-1"
+              ?compatibility="${demoCompatibility}"
+            >
               ${this.items.map(
                 item =>
                   html`
@@ -236,7 +256,8 @@ export class PageDropdownMenu extends DemoPage {
         <ul>
           <li><b>Filled</b> (normal) - For low emphasis inputs</li>
           <li><b>Outlined</b> - For high emphasis inputs</li>
-          <li><b>Legacy</b> - To provide compatibility with legacy Anypoint design</li>
+          <b>Compatibility</b>
+          - To provide compatibility with Anypoint design
         </ul>
 
         <p>
@@ -328,7 +349,7 @@ window.customElements.define('simple-element', SimpleElement);`}
         <anypoint-dropdown-menu aria-owns="preSelectedList">
           <label slot="label" id="preSelectedLabel">Pre-selected dinosaur</label>
           <anypoint-listbox slot="dropdown-content" tabindex="-1" selected="1" id="preSelectedList">
-            ${this.items.map(
+            ${this.minItems.map(
               item =>
                 html`
                   <anypoint-item>${item}</anypoint-item>
@@ -366,7 +387,7 @@ window.customElements.define('simple-element', SimpleElement);`}
             attrforselected="label"
             selected="Brontosaurus"
           >
-            ${this.items.map(
+            ${this.minItems.map(
               item =>
                 html`
                   <anypoint-item label="${item}">${item}</anypoint-item>
@@ -399,7 +420,7 @@ window.customElements.define('simple-element', SimpleElement);`}
         <anypoint-dropdown-menu dir="rtl">
           <label slot="label">Select a dinosaur</label>
           <anypoint-listbox slot="dropdown-content" tabindex="-1">
-            ${this.items.map(
+            ${this.minItems.map(
               item =>
                 html`
                   <anypoint-item>${item}</anypoint-item>
@@ -438,7 +459,7 @@ window.customElements.define('simple-element', SimpleElement);`}
         <anypoint-dropdown-menu verticalalign="bottom">
           <label slot="label">Select a dinosaur</label>
           <anypoint-listbox slot="dropdown-content" tabindex="-1">
-            ${this.items.map(
+            ${this.minItems.map(
               item =>
                 html`
                   <anypoint-item>${item}</anypoint-item>
@@ -468,7 +489,7 @@ window.customElements.define('simple-element', SimpleElement);`}
         <anypoint-dropdown-menu dynamicalign>
           <label slot="label">Select a dinosaur</label>
           <anypoint-listbox slot="dropdown-content" tabindex="-1">
-            ${this.items.map(
+            ${this.minItems.map(
               item =>
                 html`
                   <anypoint-item>${item}</anypoint-item>
@@ -498,7 +519,7 @@ window.customElements.define('simple-element', SimpleElement);`}
   }
 
   _formsTemplate() {
-    const { darkThemeActive, formFieldsDisabled } = this;
+    const { darkThemeActive, formFieldsDisabled, formMenuDisabled } = this;
     return html`
       <section class="documentation-section">
         <h2>Working with forms</h2>
@@ -529,15 +550,15 @@ window.customElements.define('simple-element', SimpleElement);`}
           <summary>Code example</summary>
           <code>
             <pre>
-              &lt;anypoint-dropdown-menu disabled&gt;
-                &lt;label slot="label"&gt;Select a dinosaur&lt;/label&gt;
-                &lt;anypoint-listbox slot="dropdown-content"&gt;
-                  &lt;anypoint-item label="Allosaurus"&gt;Allosaurus&lt;/anypoint-item&gt;
-                  &lt;anypoint-item label="Brontosaurus"&gt;Brontosaurus&lt;/anypoint-item&gt;
-                  &lt;anypoint-item label="Carcharodontosaurus"&gt;Carcharodontosaurus&lt;/anypoint-item&gt;
-                &lt;/anypoint-listbox&gt;
-              &lt;/anypoint-dropdown-menu&gt;
-              </pre
+            &lt;anypoint-dropdown-menu disabled&gt;
+              &lt;label slot="label"&gt;Select a dinosaur&lt;/label&gt;
+              &lt;anypoint-listbox slot="dropdown-content"&gt;
+                &lt;anypoint-item label="Allosaurus"&gt;Allosaurus&lt;/anypoint-item&gt;
+                &lt;anypoint-item label="Brontosaurus"&gt;Brontosaurus&lt;/anypoint-item&gt;
+                &lt;anypoint-item label="Carcharodontosaurus"&gt;Carcharodontosaurus&lt;/anypoint-item&gt;
+              &lt;/anypoint-listbox&gt;
+            &lt;/anypoint-dropdown-menu&gt;
+            </pre
             >
           </code>
         </details>
@@ -563,15 +584,15 @@ window.customElements.define('simple-element', SimpleElement);`}
           <summary>Code example</summary>
           <code>
             <pre>
-              &lt;anypoint-dropdown-menu invalid&gt;
-                &lt;label slot="label"&gt;Select a dinosaur&lt;/label&gt;
-                &lt;anypoint-listbox slot="dropdown-content" selected="1"&gt;
-                  &lt;anypoint-item label="Allosaurus"&gt;Allosaurus&lt;/anypoint-item&gt;
-                  &lt;anypoint-item label="Brontosaurus"&gt;Brontosaurus&lt;/anypoint-item&gt;
-                  &lt;anypoint-item label="Carcharodontosaurus"&gt;Carcharodontosaurus&lt;/anypoint-item&gt;
-                &lt;/anypoint-listbox&gt;
-              &lt;/anypoint-dropdown-menu&gt;
-              </pre
+            &lt;anypoint-dropdown-menu invalid&gt;
+              &lt;label slot="label"&gt;Select a dinosaur&lt;/label&gt;
+              &lt;anypoint-listbox slot="dropdown-content" selected="1"&gt;
+                &lt;anypoint-item label="Allosaurus"&gt;Allosaurus&lt;/anypoint-item&gt;
+                &lt;anypoint-item label="Brontosaurus"&gt;Brontosaurus&lt;/anypoint-item&gt;
+                &lt;anypoint-item label="Carcharodontosaurus"&gt;Carcharodontosaurus&lt;/anypoint-item&gt;
+              &lt;/anypoint-listbox&gt;
+            &lt;/anypoint-dropdown-menu&gt;
+            </pre
             >
           </code>
         </details>
@@ -604,15 +625,15 @@ window.customElements.define('simple-element', SimpleElement);`}
           <summary>Code example</summary>
           <code>
             <pre>
-              &lt;anypoint-dropdown-menu autovalidate required&gt;
-                &lt;label slot="label"&gt;Select a dinosaur&lt;/label&gt;
-                &lt;anypoint-listbox slot="dropdown-content"&gt;
-                  &lt;anypoint-item label="Allosaurus"&gt;Allosaurus&lt;/anypoint-item&gt;
-                  &lt;anypoint-item label="Brontosaurus"&gt;Brontosaurus&lt;/anypoint-item&gt;
-                  &lt;anypoint-item label="Carcharodontosaurus"&gt;Carcharodontosaurus&lt;/anypoint-item&gt;
-                &lt;/anypoint-listbox&gt;
-              &lt;/anypoint-dropdown-menu&gt;
-              </pre
+            &lt;anypoint-dropdown-menu autovalidate required&gt;
+              &lt;label slot="label"&gt;Select a dinosaur&lt;/label&gt;
+              &lt;anypoint-listbox slot="dropdown-content"&gt;
+                &lt;anypoint-item label="Allosaurus"&gt;Allosaurus&lt;/anypoint-item&gt;
+                &lt;anypoint-item label="Brontosaurus"&gt;Brontosaurus&lt;/anypoint-item&gt;
+                &lt;anypoint-item label="Carcharodontosaurus"&gt;Carcharodontosaurus&lt;/anypoint-item&gt;
+              &lt;/anypoint-listbox&gt;
+            &lt;/anypoint-dropdown-menu&gt;
+            </pre
             >
           </code>
         </details>
@@ -637,7 +658,7 @@ window.customElements.define('simple-element', SimpleElement);`}
           <form enctype="application/json" @submit="${this._formSubmit}" slot="content">
             <fieldset ?disabled="${formFieldsDisabled}">
               <legend>Form fields group</legend>
-              <anypoint-dropdown-menu required name="dino">
+              <anypoint-dropdown-menu required name="dino" ?disabled="${formMenuDisabled}">
                 <label slot="label">Select a dinosaur</label>
                 <anypoint-listbox slot="dropdown-content" tabindex="-1">
                   ${this.items.map(
@@ -649,8 +670,11 @@ window.customElements.define('simple-element', SimpleElement);`}
                 </anypoint-listbox>
               </anypoint-dropdown-menu>
               <br />
-              <input type="text" name="textInput" aria-label="Input text" />
+              <label for="fieldsetInput">Input inside fieldset</label><br />
+              <input type="text" name="textInput" id="fieldsetInput" />
             </fieldset>
+            <label for="outsideInput">Input outside fieldset</label><br />
+            <input type="text" name="textInput2" id="outsideInput" /><br />
             <input type="reset" value="Reset" />
             <input type="submit" value="Submit" />
           </form>
@@ -663,6 +687,13 @@ window.customElements.define('simple-element', SimpleElement);`}
             @change="${this._toggleMainOption}"
             >Disable fieldset</anypoint-checkbox
           >
+          <anypoint-checkbox
+            aria-describedby="formOptionsLabel"
+            slot="options"
+            name="formMenuDisabled"
+            @change="${this._toggleMainOption}"
+            >Disable dropdown</anypoint-checkbox
+          >
         </arc-interactive-demo>
 
         ${this.formData
@@ -670,11 +701,6 @@ window.customElements.define('simple-element', SimpleElement);`}
               <b>Form values</b><output>${this.formData}</output>
             `
           : undefined}
-
-        <p>
-          Note <a href="https://bugs.chromium.org/p/chromium/issues/detail?id=992504">this bug</a>
-          when toggling disabled state.
-        </p>
       </section>
     `;
   }

@@ -3,7 +3,11 @@ import '../page-button.js';
 
 describe('PageButton', () => {
   async function basicFixture() {
-    return fixture(html`<page-button></page-button>`);
+    return fixture(
+      html`
+        <page-button></page-button>
+      `,
+    );
   }
 
   describe('cosntructor()', () => {
@@ -13,7 +17,7 @@ describe('PageButton', () => {
     });
 
     it('sets buttonStates', () => {
-      assert.deepEqual(element.buttonStates, ['Text', 'Outlined', 'Contained', 'Legacy']);
+      assert.deepEqual(element.buttonStates, ['Text', 'Outlined', 'Contained']);
     });
 
     it('sets demoButtonEmphasis', () => {

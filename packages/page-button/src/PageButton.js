@@ -53,19 +53,19 @@ export class PageButton extends DemoPage {
     super();
     this.initObservableProperties([
       'demoButtonEmphasis',
-      'demoButtonLegacy',
+      'demoButtonCompatibility',
       'demoToggles',
       'demoLeadingIcon',
       'demoNoink',
       'demoDisabed',
-      'iconButtonLegacy',
+      'iconButtonCompatibility',
       'iconButtonEmphasis',
       'iconNoink',
       'iconDisabed',
       'iconToggles',
     ]);
 
-    this.buttonStates = ['Text', 'Outlined', 'Contained', 'Legacy'];
+    this.buttonStates = ['Text', 'Outlined', 'Contained'];
     this.demoButtonEmphasis = 'low';
     this.iconButtonEmphasis = 'low';
   }
@@ -87,12 +87,7 @@ export class PageButton extends DemoPage {
         value = '';
         break;
     }
-    if (value) {
-      this.demoButtonEmphasis = value;
-      this.demoButtonLegacy = false;
-    } else {
-      this.demoButtonLegacy = true;
-    }
+    this.demoButtonEmphasis = value;
     this.notifyStateChange(value || 'default', 'main-demo-change');
   }
 
@@ -113,12 +108,7 @@ export class PageButton extends DemoPage {
         value = '';
         break;
     }
-    if (value) {
-      this.iconButtonEmphasis = value;
-      this.iconButtonLegacy = false;
-    } else {
-      this.iconButtonLegacy = true;
-    }
+    this.iconButtonEmphasis = value;
     this.notifyStateChange(value || 'default', 'icon-demo-change');
   }
 
@@ -128,13 +118,12 @@ export class PageButton extends DemoPage {
   }
 
   _contentControlClick(e) {
-    const nodes = this.shadowRoot.querySelectorAll('.content-control.group');
-    const prop = 'active';
-    Array.from(nodes).forEach(node => {
+    const items = this.shadowRoot.querySelectorAll('.content-control.group');
+    Array.from(items).forEach(node => {
       if (node === e.currentTarget) {
         return;
       }
-      node[prop] = false;
+      node.active = false;
     });
   }
 
@@ -142,7 +131,7 @@ export class PageButton extends DemoPage {
     const {
       buttonStates,
       demoButtonEmphasis,
-      demoButtonLegacy,
+      demoButtonCompatibility,
       demoNoink,
       demoToggles,
       demoLeadingIcon,
@@ -164,7 +153,7 @@ export class PageButton extends DemoPage {
             slot="content"
             emphasis="${demoButtonEmphasis}"
             title="Low emphasis button"
-            ?legacy="${demoButtonLegacy}"
+            ?compatibility="${demoButtonCompatibility}"
             ?noink="${demoNoink}"
             ?toggles="${demoToggles}"
             ?disabled="${demoDisabed}"
@@ -206,6 +195,13 @@ export class PageButton extends DemoPage {
             @change="${this._toggleMainOption}"
             >Disabled</anypoint-checkbox
           >
+          <anypoint-checkbox
+            aria-describedby="mainOptionsLabel"
+            slot="options"
+            name="demoButtonCompatibility"
+            @change="${this._toggleMainOption}"
+            >Anypoint</anypoint-checkbox
+          >
         </arc-interactive-demo>
       </section>
     `;
@@ -215,7 +211,7 @@ export class PageButton extends DemoPage {
     const {
       buttonStates,
       iconButtonEmphasis,
-      iconButtonLegacy,
+      iconButtonCompatibility,
       iconNoink,
       iconToggles,
       iconDisabed,
@@ -246,7 +242,7 @@ export class PageButton extends DemoPage {
             slot="content"
             emphasis="${iconButtonEmphasis}"
             title="Icon button"
-            ?legacy="${iconButtonLegacy}"
+            ?compatibility="${iconButtonCompatibility}"
             ?noink="${iconNoink}"
             ?toggles="${iconToggles}"
             ?disabled="${iconDisabed}"
@@ -277,6 +273,13 @@ export class PageButton extends DemoPage {
             name="iconDisabed"
             @change="${this._toggleMainOption}"
             >Disabled</anypoint-checkbox
+          >
+          <anypoint-checkbox
+            aria-describedby="mainOptionsLabel"
+            slot="options"
+            name="iconButtonCompatibility"
+            @change="${this._toggleMainOption}"
+            >Anypoint</anypoint-checkbox
           >
         </arc-interactive-demo>
 

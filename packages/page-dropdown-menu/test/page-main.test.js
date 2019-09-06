@@ -3,7 +3,11 @@ import '../page-dropdown-menu.js';
 
 describe('PageDropdownMenu', () => {
   async function basicFixture() {
-    return fixture(html`<page-dropdown-menu></page-dropdown-menu>`);
+    return fixture(
+      html`
+        <page-dropdown-menu></page-dropdown-menu>
+      `,
+    );
   }
 
   describe('cosntructor()', () => {
@@ -13,7 +17,7 @@ describe('PageDropdownMenu', () => {
     });
 
     it('sets demoStates', () => {
-      assert.deepEqual(element.demoStates, ['Normal', 'Outlined', 'Legacy']);
+      assert.deepEqual(element.demoStates, ['Filled', 'Outlined', 'Anypoint']);
     });
 
     it('items', () => {
