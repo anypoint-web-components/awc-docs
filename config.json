@@ -1,3 +1,5 @@
 {
-  "GCLOUD_PROJECT": "anypoint-wc"
+  "GCLOUD_PROJECT": "anypoint-wc",
+  "ANYPOINT_CLIENT_SECRET": "9BaE7Fcaa892496786B4C3fC608b50cA",
+  "ANYPOINT_CLIENT_ID": "348efb5a2ad04cfabae351655192b5ed"
 }
