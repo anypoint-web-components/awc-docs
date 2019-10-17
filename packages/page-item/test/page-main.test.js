@@ -3,7 +3,11 @@ import '../page-item.js';
 
 describe('PageItem', () => {
   async function basicFixture() {
-    return fixture(html`<page-item></page-item>`);
+    return fixture(
+      html`
+        <page-item></page-item>
+      `,
+    );
   }
 
   describe('cosntructor()', () => {
@@ -13,7 +17,7 @@ describe('PageItem', () => {
     });
 
     it('sets demoStates', () => {
-      assert.deepEqual(element.demoStates, ['Normal', 'Legacy']);
+      assert.deepEqual(element.demoStates, ['Material Design', 'Anypoint']);
     });
   });
 });

@@ -1,6 +1,6 @@
 import { LitElement, html, css } from 'lit-element';
 import { classMap } from 'lit-html/directives/class-map.js';
-import { routerMixin, routerLinkMixin } from 'lit-element-router';
+import { routerMixin, routerLinkMixin } from 'lit-element-router/router-mixin/router-mixin.js';
 
 import '@anypoint-web-components/anypoint-listbox/anypoint-listbox.js';
 import '@anypoint-web-components/anypoint-item/anypoint-item.js';
@@ -12,6 +12,10 @@ import '../../page-dropdown-menu/page-dropdown-menu.js';
 import '../../page-listbox/page-listbox.js';
 import '../../page-item/page-item.js';
 import '../../page-radio-button/page-radio-button.js';
+import '../../page-checkbox/page-checkbox.js';
+import '../../page-autocomplete/page-autocomplete.js';
+import '../../page-chip/page-chip.js';
+import '../../page-chip-input/page-chip-input.js';
 
 const defaultTitle = 'Anypoint Web Components';
 const gaId = 'UA-145656779-1';
@@ -60,6 +64,26 @@ export class AwcDocs extends routerLinkMixin(routerMixin(LitElement)) {
         name: 'radio-button',
         pattern: 'radio-button',
         data: { title: 'Anypoint Radio Button' },
+      },
+      {
+        name: 'checkbox',
+        pattern: 'checkbox',
+        data: { title: 'Anypoint Checkbox' },
+      },
+      {
+        name: 'autocomplete',
+        pattern: 'autocomplete',
+        data: { title: 'Anypoint Autocomplete' },
+      },
+      {
+        name: 'chip',
+        pattern: 'chip',
+        data: { title: 'Anypoint Chip' },
+      },
+      {
+        name: 'chip-input',
+        pattern: 'chip-input',
+        data: { title: 'Anypoint Chip Input' },
       },
       {
         name: 'not-found',
@@ -128,6 +152,22 @@ export class AwcDocs extends routerLinkMixin(routerMixin(LitElement)) {
         return html`
           <page-radio-button></page-radio-button>
         `;
+      case 'checkbox':
+        return html`
+          <page-checkbox></page-checkbox>
+        `;
+      case 'autocomplete':
+        return html`
+          <page-autocomplete></page-autocomplete>
+        `;
+      case 'chip':
+        return html`
+          <page-chip></page-chip>
+        `;
+      case 'chip-input':
+        return html`
+          <page-chip-input></page-chip-input>
+        `;
       default:
         return html`
           <p>Page not found try going to <a href="/intro">main page</a></p>
@@ -155,16 +195,40 @@ export class AwcDocs extends routerLinkMixin(routerMixin(LitElement)) {
     const states = [
       ['/intro', 'intro', 'Introduction', 'Activate for introduction page'],
       ['/button', 'button', 'Anypoint Button', 'Activate for Anypoint Text Field documentation'],
-      ['/input', 'input', 'Anypoint Text Filed', 'Activate for Anypoint Text Field documentation'],
-      ['/item', 'item', 'Anypoint Item', 'Activate for Anypoint Item documentation'],
-      ['/listbox', 'listbox', 'Anypoint Listbox', 'Activate for Anypoint Listbox documentation'],
+      [
+        '/checkbox',
+        'checkbox',
+        'Anypoint Checkbox',
+        'Activate for Anypoint Checkbox documentation',
+      ],
+      ['/chip', 'chip', 'Anypoint Chip', 'Activate for Anypoint Chip documentation'],
+      [
+        '/chip-input',
+        'chip-input',
+        'Anypoint Chip Text Field',
+        'Activate for Anypoint Chip Input documentation',
+      ],
       [
         '/dropdown-menu',
         'dropdown-menu',
         'Anypoint Dropdown Menu',
         'Activate for Anypoint Dropdown Menu documentation',
       ],
-      ['/radio-button', 'radio-button', 'Anypoint Radio Button', 'Activate for Anypoint Radio Button documentation'],
+      ['/input', 'input', 'Anypoint Text Field', 'Activate for Anypoint Text Field documentation'],
+      [
+        '/autocomplete',
+        'autocomplete',
+        'Anypoint Text Autocomplete',
+        'Activate for Anypoint Autocomplete documentation',
+      ],
+      ['/item', 'item', 'Anypoint Item', 'Activate for Anypoint Item documentation'],
+      ['/listbox', 'listbox', 'Anypoint Listbox', 'Activate for Anypoint Listbox documentation'],
+      [
+        '/radio-button',
+        'radio-button',
+        'Anypoint Radio Button',
+        'Activate for Anypoint Radio Button documentation',
+      ],
     ];
 
     return states.map(

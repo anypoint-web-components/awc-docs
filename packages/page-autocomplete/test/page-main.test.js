@@ -1,11 +1,11 @@
 import { html, fixture, assert } from '@open-wc/testing';
-import '../page-listbox.js';
+import '../page-autocomplete.js';
 
-describe('PageListbox', () => {
+describe('PageAutocomplete', () => {
   async function basicFixture() {
     return fixture(
       html`
-        <page-listbox></page-listbox>
+        <page-autocomplete></page-autocomplete>
       `,
     );
   }
@@ -17,11 +17,7 @@ describe('PageListbox', () => {
     });
 
     it('sets demoStates', () => {
-      assert.deepEqual(element.demoStates, ['Material Design', 'Anypoint']);
-    });
-
-    it('sets fruits', () => {
-      assert.typeOf(element.fruits, 'array');
+      assert.deepEqual(element.demoStates, ['Filled', 'Outlined', 'Anypoint']);
     });
   });
 });

@@ -3,7 +3,11 @@ import '../page-input.js';
 
 describe('PageInput', () => {
   async function basicFixture() {
-    return fixture(html`<page-input></page-input>`);
+    return fixture(
+      html`
+        <page-input></page-input>
+      `,
+    );
   }
 
   describe('cosntructor()', () => {
@@ -13,11 +17,11 @@ describe('PageInput', () => {
     });
 
     it('sets demoStates', () => {
-      assert.deepEqual(element.textFieldStates, ['Normal', 'Outlined', 'Legacy']);
+      assert.deepEqual(element.textFieldStates, ['Filled', 'Outlined', 'Anypoint']);
     });
 
     it('sets textFieldLegacy', () => {
-      assert.isFalse(element.textFieldLegacy);
+      assert.isFalse(element.textFieldOutlined);
     });
 
     it('sets textFieldOutlined', () => {

@@ -13,34 +13,72 @@ export class PageListbox extends DemoPage {
       headersStyles,
       css`
         hr {
-        border-left: 1px #cacbcc solid;
-        border-right: 1px #cacbcc solid;
-        margin: 0;
-      }
+          border-left: 1px #cacbcc solid;
+          border-right: 1px #cacbcc solid;
+          margin: 0;
+        }
 
-      .scrolled {
-        max-height: 250px;
-        overflow: auto;
-      }
-      `
+        .scrolled {
+          max-height: 250px;
+          overflow: auto;
+        }
+      `,
     ];
   }
 
   constructor() {
     super();
-    this.initObservableProperties([
-      'demoLegacy'
-    ]);
-    this.demoStates = ['Normal', 'Legacy'];
-    this.fruits = ['Apple', 'Apricot', 'Avocado',
-      'Banana', 'Bilberry', 'Blackberry', 'Blackcurrant', 'Blueberry',
-      'Boysenberry', 'Cantaloupe', 'Currant', 'Cherry', 'Cherimoya',
-      'Cloudberry', 'Coconut', 'Cranberry', 'Damson', 'Date', 'Dragonfruit',
-      'Durian', 'Elderberry', 'Feijoa', 'Fig', 'Goji berry', 'Gooseberry',
-      'Grape', 'Grapefruit', 'Guava', 'Huckleberry', 'Jabuticaba', 'Jackfruit',
-      'Jambul', 'Jujube', 'Juniper berry', 'Kiwi fruit', 'Kumquat', 'Lemon',
-      'Lime', 'Loquat', 'Lychee', 'Mango', 'Marion berry', 'Melon', 'Miracle fruit',
-      'Mulberry', 'Nectarine', 'Olive', 'Orange'
+    this.initObservableProperties(['demoCompatibility']);
+    this.demoStates = ['Material Design', 'Anypoint'];
+    this.fruits = [
+      'Apple',
+      'Apricot',
+      'Avocado',
+      'Banana',
+      'Bilberry',
+      'Blackberry',
+      'Blackcurrant',
+      'Blueberry',
+      'Boysenberry',
+      'Cantaloupe',
+      'Currant',
+      'Cherry',
+      'Cherimoya',
+      'Cloudberry',
+      'Coconut',
+      'Cranberry',
+      'Damson',
+      'Date',
+      'Dragonfruit',
+      'Durian',
+      'Elderberry',
+      'Feijoa',
+      'Fig',
+      'Goji berry',
+      'Gooseberry',
+      'Grape',
+      'Grapefruit',
+      'Guava',
+      'Huckleberry',
+      'Jabuticaba',
+      'Jackfruit',
+      'Jambul',
+      'Jujube',
+      'Juniper berry',
+      'Kiwi fruit',
+      'Kumquat',
+      'Lemon',
+      'Lime',
+      'Loquat',
+      'Lychee',
+      'Mango',
+      'Marion berry',
+      'Melon',
+      'Miracle fruit',
+      'Mulberry',
+      'Nectarine',
+      'Olive',
+      'Orange',
     ];
   }
 
@@ -48,40 +86,37 @@ export class PageListbox extends DemoPage {
     const state = e.detail.value;
     switch (state) {
       case 0:
-        this.demoLegacy = false;
+        this.demoCompatibility = false;
         break;
       case 1:
-        this.demoLegacy = true;
+        this.demoCompatibility = true;
         break;
       default:
     }
   }
 
   _demoTemplate() {
-    const {
-      demoStates,
-      darkThemeActive,
-      demoLegacy
-    } = this;
-    return html`<section class="documentation-section">
-    <h3>Interactive demo</h3>
-    <p>
-      This demo lets you preview the listbox element with various
-      configuration options.
-    </p>
-    <arc-interactive-demo
-      .states="${demoStates}"
-      @state-chanegd="${this._mainDemoStateHandler}"
-      ?dark="${darkThemeActive}"
-    >
-      <anypoint-listbox slot="content" ?legacy="${demoLegacy}">
-        <anypoint-item>API project 1</anypoint-item>
-        <anypoint-item>API project 2</anypoint-item>
-        <anypoint-item>API project 3</anypoint-item>
-        <anypoint-item>API project 4</anypoint-item>
-      </anypoint-listbox>
-    </arc-interactive-demo>
-    </section>`;
+    const { demoStates, darkThemeActive, demoCompatibility } = this;
+    return html`
+      <section class="documentation-section">
+        <h3>Interactive demo</h3>
+        <p>
+          This demo lets you preview the listbox element with various configuration options.
+        </p>
+        <arc-interactive-demo
+          .states="${demoStates}"
+          @state-chanegd="${this._mainDemoStateHandler}"
+          ?dark="${darkThemeActive}"
+        >
+          <anypoint-listbox slot="content" ?compatibility="${demoCompatibility}">
+            <anypoint-item>API project 1</anypoint-item>
+            <anypoint-item>API project 2</anypoint-item>
+            <anypoint-item>API project 3</anypoint-item>
+            <anypoint-item>API project 4</anypoint-item>
+          </anypoint-listbox>
+        </arc-interactive-demo>
+      </section>
+    `;
   }
 
   _usageTemplate() {
@@ -92,13 +127,13 @@ export class PageListbox extends DemoPage {
         <ul>
           <li><b>Normal</b></li>
           <li>
-            <b>Legacy</b> - To provide compatibility with legacy Anypoint design
+            <b>Compatibility</b> - To provide compatibility with Anypoint design
           </li>
         </ul>
 
         <p>
-          The element has no particular styling options for legacy style but it
-          it sets <code>legacy</code> attribute on children. This way you can
+          Even though the element has no particular styling options for Anypoint style,
+          it sets <code>compatibility</code> attribute on children. This way you can
           propagate Anypoint theme without setting the attribute on each element.
         </p>
 
@@ -263,16 +298,20 @@ window.customElements.define('simple-element', SimpleElement);`}
       becomes focused item. The user can confirm selection via space bar / enter key.
     </p>
     <anypoint-listbox class="scrolled">
-    ${this.fruits.map((item) => html`<anypoint-item role="option">${item}</anypoint-item>`)}
+    ${this.fruits.map(
+      item =>
+        html`
+          <anypoint-item role="option">${item}</anypoint-item>
+        `,
+    )}
     </anypoint-listbox>
     `;
   }
 
   contentTemplate() {
     return html`
-    <h2>Anypoint listbox</h2>
-    ${this._demoTemplate()}
-    ${templateIntroduction}
-    ${this._usageTemplate()}`;
+      <h2>Anypoint listbox</h2>
+      ${this._demoTemplate()} ${templateIntroduction} ${this._usageTemplate()}
+    `;
   }
 }

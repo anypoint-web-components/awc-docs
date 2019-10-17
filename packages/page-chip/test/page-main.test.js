@@ -1,11 +1,11 @@
 import { html, fixture, assert } from '@open-wc/testing';
-import '../page-listbox.js';
+import '../page-chip.js';
 
-describe('PageListbox', () => {
+describe('PageChip', () => {
   async function basicFixture() {
     return fixture(
       html`
-        <page-listbox></page-listbox>
+        <page-chip></page-chip>
       `,
     );
   }
@@ -18,10 +18,6 @@ describe('PageListbox', () => {
 
     it('sets demoStates', () => {
       assert.deepEqual(element.demoStates, ['Material Design', 'Anypoint']);
-    });
-
-    it('sets fruits', () => {
-      assert.typeOf(element.fruits, 'array');
     });
   });
 });
