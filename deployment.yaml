@@ -54,3 +54,13 @@ spec:
             value: /var/secrets/google/key.json
           - name: PROJECT_ID
             value: anypoint-wc
+          - name: ANYPOINT_CLIENT_SECRET
+            valueFrom:
+              secretKeyRef:
+                name: anypoint-oauth
+                key: clientSecret
+          - name: ANYPOINT_CLIENT_ID
+            valueFrom:
+              secretKeyRef:
+                name: anypoint-oauth
+                key: clientId

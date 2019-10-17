@@ -29,6 +29,8 @@ app.get('/_ah/health', (req, res) => {
   res.status(200).send('ok');
 });
 
+app.use('/api/v1', require('./api'));
+
 app.get('*', (req, res) => {
   const index = path.join('dist', 'index.html');
   fs.readFile(index, 'utf8', (err, data) => {
