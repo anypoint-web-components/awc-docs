@@ -1,6 +1,6 @@
 {
   "name": "awc-docs",
-  "version": "0.1.5",
+  "version": "0.1.6",
   "description": "Documentation website for OSS Anypont Web Components",
   "author": "Pawel Psztyc",
   "license": "Apache-2.0",
@@ -31,7 +31,7 @@
     "gke:deploy-ingress": "kubectl apply -f app-ingress.yaml"
   },
   "devDependencies": {
-    "@open-wc/building-rollup": "^0.11.0",
+    "@open-wc/building-rollup": "^0.11.2",
     "@open-wc/demoing-storybook": "^0.3.0",
     "@open-wc/eslint-config": "^1.1.1",
     "@open-wc/prettier-config": "^0.1.10",
@@ -64,10 +64,26 @@
     "rules": {
       "require-jsdoc": 0,
       "comma-dangle": 0,
-      "new-cap": [ "error", { "properties": false, "capIsNew": false } ],
-      "max-len": [ "error", { "code": 120 } ],
-      "object-curly-spacing": ["error", "always"],
-      "no-console": ["error"]
+      "new-cap": [
+        "error",
+        {
+          "properties": false,
+          "capIsNew": false
+        }
+      ],
+      "max-len": [
+        "error",
+        {
+          "code": 120
+        }
+      ],
+      "object-curly-spacing": [
+        "error",
+        "always"
+      ],
+      "no-console": [
+        "error"
+      ]
     }
   },
   "husky": {
