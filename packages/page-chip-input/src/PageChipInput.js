@@ -4,6 +4,7 @@ import '@anypoint-web-components/anypoint-chip-input/anypoint-chip-input.js';
 import '@polymer/iron-icon/iron-icon.js';
 import '@polymer/iron-icons/iron-icons.js';
 import '@polymer/iron-icons/maps-icons.js';
+import * as mapIcons from './maps-icons.js';
 import { DemoPage } from '../../demo-page/demo-page.js';
 import { demoContentStyles, headersStyles } from '../../awc-docs/src/common-styles.js';
 
@@ -97,50 +98,50 @@ export class PageChipInput extends DemoPage {
       },
       {
         label: 'Chip #3',
-        icon: 'maps:directions-bike',
+        icon: mapIcons.directionsBike,
       },
     ];
 
     this.iconSuggestions = [
       {
         value: 'Biking',
-        icon: 'maps:directions-bike',
+        icon: mapIcons.directionsBike,
       },
       {
         value: 'Boat trip',
-        icon: 'maps:directions-boat',
+        icon: mapIcons.directionsBoat,
       },
       {
         value: 'Bus trip',
-        icon: 'maps:directions-bus',
+        icon: mapIcons.directionsBus,
       },
       {
         value: 'Car trip',
-        icon: 'maps:directions-car',
+        icon: mapIcons.directionsCar,
       },
       {
         value: 'Train trip',
-        icon: 'maps:directions-railway',
+        icon: mapIcons.directionsRailway,
       },
       {
         value: 'Running',
-        icon: 'maps:directions-run',
+        icon: mapIcons.directionsRun,
       },
       {
         value: 'Hiking',
-        icon: 'maps:directions-walk',
+        icon: mapIcons.directionsWalk,
       },
       {
         value: 'Reading',
-        icon: 'maps:local-library',
+        icon: mapIcons.localLibrary,
       },
       {
         value: 'Shopping',
-        icon: 'maps:local-grocery-store',
+        icon: mapIcons.localGroceryStore,
       },
       {
         value: 'Movies!',
-        icon: 'maps:local-movies',
+        icon: mapIcons.localMovies,
       },
     ];
 
@@ -149,52 +150,52 @@ export class PageChipInput extends DemoPage {
     this.idSuggestions = [
       {
         value: 'Biking',
-        icon: 'maps:directions-bike',
+        icon: mapIcons.directionsBike,
         id: 'activity-1',
       },
       {
         value: 'Boat trip',
-        icon: 'maps:directions-boat',
+        icon: mapIcons.directionsBoat,
         id: 'activity-2',
       },
       {
         value: 'Bus trip',
-        icon: 'maps:directions-bus',
+        icon: mapIcons.directionsBus,
         id: 'activity-3',
       },
       {
         value: 'Car trip',
-        icon: 'maps:directions-car',
+        icon: mapIcons.directionsCar,
         id: 'activity-4',
       },
       {
         value: 'Train trip',
-        icon: 'maps:directions-railway',
+        icon: mapIcons.directionsRailway,
         id: 'activity-5',
       },
       {
         value: 'Running',
-        icon: 'maps:directions-run',
+        icon: mapIcons.directionsRun,
         id: 'activity-6',
       },
       {
         value: 'Hiking',
-        icon: 'maps:directions-walk',
+        icon: mapIcons.directionsWalk,
         id: 'activity-7',
       },
       {
         value: 'Reading',
-        icon: 'maps:local-library',
+        icon: mapIcons.localLibrary,
         id: 'activity-8',
       },
       {
         value: 'Shopping',
-        icon: 'maps:local-grocery-store',
+        icon: mapIcons.localGroceryStore,
         id: 'activity-9',
       },
       {
         value: 'Movies!',
-        icon: 'maps:local-movies',
+        icon: mapIcons.localMovies,
         id: 'activity-10',
       },
     ];
@@ -207,15 +208,7 @@ export class PageChipInput extends DemoPage {
 
   _demoStateHandler(e) {
     const state = e.detail.value;
-    switch (state) {
-      case 0:
-      default:
-        this.demoCompatibility = false;
-        break;
-      case 1:
-        this.demoCompatibility = true;
-        break;
-    }
+    this.demoCompatibility = state === 1;
   }
 
   _demoTemplate() {
@@ -235,7 +228,7 @@ export class PageChipInput extends DemoPage {
       <section class="documentation-section">
         <h3>Interactive demo</h3>
         <p>
-          This demo lets you preview the text field element with various configuration options.
+          This demo lets you preview the chip text field element with various configuration options.
         </p>
         <arc-interactive-demo
           .states="${demoStates}"
@@ -246,7 +239,6 @@ export class PageChipInput extends DemoPage {
             slot="content"
             ?compatibility="${demoCompatibility}"
             ?removable="${demoRemovable}"
-            demoSuggestions
             ?disabled="${demoDisabled}"
             .allowed="${allowed}"
             .infoMessage="${info}"
@@ -351,7 +343,7 @@ export class PageChipInput extends DemoPage {
                 label: 'Chip #2', removable: true
               },
               {
-                label: 'Chip #3', icon: 'maps:directions-bike'
+                label: 'Chip #3', icon: mapIcons.directionsBike
               }
             ];
             ...
@@ -365,7 +357,7 @@ export class PageChipInput extends DemoPage {
           </code>
         </details>
 
-        <h3>Chip suggestions with icons</h3>
+        <h3>Chip suggestions</h3>
         <p>
           Chip input accepts <code>source</code> array with a list of suggestions to render in a
           dropdown on user input. It can be list of strings or a list of maps with
@@ -403,7 +395,6 @@ export class PageChipInput extends DemoPage {
         <anypoint-chip-input .source="${this.iconSuggestions}" infoMessage="Type 'b' in the input">
           <label slot="label">Type your favourite fruits</label>
         </anypoint-chip-input>
-
         <details>
           <summary>Code example</summary>
           <code>
@@ -411,13 +402,13 @@ export class PageChipInput extends DemoPage {
             ${`const source = [
               {
                 value: 'Biking',
-                icon: 'maps:directions-bike'
+                icon: mapIcons.directionsBike
               }, {
                 value: 'Boat trip',
-                icon: 'maps:directions-boat'
+                icon: mapIcons.directionsBoat
               }, {
                 value: 'Bus trip',
-                icon: 'maps:directions-bus'
+                icon: mapIcons.directionsBus
               }
               ...
             ];
@@ -440,7 +431,6 @@ export class PageChipInput extends DemoPage {
         <anypoint-chip-input .chipsValue="${this.auto5Out}" .source="${this.iconSuggestions}">
           <label slot="label">Type your favourite fruits</label>
         </anypoint-chip-input>
-
         <details>
           <summary>Code example</summary>
           <code>
@@ -448,13 +438,13 @@ export class PageChipInput extends DemoPage {
             ${`const source = [
               {
                 value: 'Biking',
-                icon: 'maps:directions-bike'
+                icon: mapIcons.directionsBike
               }, {
                 value: 'Boat trip',
-                icon: 'maps:directions-boat'
+                icon: mapIcons.directionsBoat
               }, {
                 value: 'Bus trip',
-                icon: 'maps:directions-bus'
+                icon: mapIcons.directionsBus
               }
               ...
             ];
@@ -476,24 +466,20 @@ export class PageChipInput extends DemoPage {
           It is possible to limit the input to a set list of values by passing allowed list to the
           <code>allowed</code> property.
         </p>
-
         <anypoint-chip-input
           .allowed="${this.allowedChips}"
           infoMessage="Only: Apple, Orange, and Banana"
         >
           <label slot="label">Only allowed will become chips and value</label>
         </anypoint-chip-input>
-
         <h3>Suggestions with IDs</h3>
         <p>
           When <code>source</code> contains an <code>id</code> property on an item, the
           <code>id</code> is returned in the chipsValue instead of <code>value</code>
         </p>
-
         <anypoint-chip-input .source="${this.idSuggestions}">
           <label slot="label">Type your favourite fruits</label>
         </anypoint-chip-input>
-
         <details>
           <summary>Code example</summary>
           <code>
@@ -501,15 +487,15 @@ export class PageChipInput extends DemoPage {
             ${`const source = [
               {
                 value: 'Biking',
-                icon: 'maps:directions-bike',
+                icon: mapIcons.directionsBike
                 id: 'activity-1'
               }, {
                 value: 'Boat trip',
-                icon: 'maps:directions-boat',
+                icon: mapIcons.directionsBoat
                 id: 'activity-2'
               }, {
                 value: 'Bus trip',
-                icon: 'maps:directions-bus',
+                icon: mapIcons.directionsBus
                 id: 'activity-3'
               }
               ...
@@ -530,11 +516,9 @@ export class PageChipInput extends DemoPage {
           Value can be restored by passing previous value to <code>chipsValue</code>
           property.
         </p>
-
         <anypoint-chip-input .chipsValue="${this.auto4Out}" .source="${this.idSuggestions}">
           <label slot="label">Type your favourite fruits</label>
         </anypoint-chip-input>
-
         <details>
           <summary>Code example</summary>
           <code>
@@ -542,15 +526,15 @@ export class PageChipInput extends DemoPage {
             ${`const source = [
               {
                 value: 'Biking',
-                icon: 'maps:directions-bike',
+                icon: mapIcons.directionsBike
                 id: 'activity-1'
               }, {
                 value: 'Boat trip',
-                icon: 'maps:directions-boat',
+                icon: mapIcons.directionsBoat
                 id: 'activity-2'
               }, {
                 value: 'Bus trip',
-                icon: 'maps:directions-bus',
+                icon: mapIcons.directionsBus
                 id: 'activity-3'
               }
               ...
@@ -573,7 +557,7 @@ export class PageChipInput extends DemoPage {
 
   contentTemplate() {
     return html`
-      <h2>Anypoint chip (pill)</h2>
+      <h2>Anypoint chip text field</h2>
       ${this._demoTemplate()} ${introTemplate} ${this._usageTemplate()}
     `;
   }

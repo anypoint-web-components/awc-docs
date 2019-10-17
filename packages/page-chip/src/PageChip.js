@@ -7,6 +7,7 @@ import '@polymer/iron-icons/communication-icons.js';
 import '@polymer/iron-icons/maps-icons.js';
 import '@polymer/iron-icons/device-icons.js';
 import '@polymer/paper-toast/paper-toast.js';
+import { clearAll } from '@advanced-rest-client/arc-icons/ArcIcons.js';
 import { DemoPage } from '../../demo-page/demo-page.js';
 import { demoContentStyles, headersStyles } from '../../awc-docs/src/common-styles.js';
 
@@ -102,15 +103,7 @@ export class PageChip extends DemoPage {
 
   _demoStateHandler(e) {
     const state = e.detail.value;
-    switch (state) {
-      case 0:
-      default:
-        this.demoCompatibility = false;
-        break;
-      case 1:
-        this.demoCompatibility = true;
-        break;
-    }
+    this.demoCompatibility = state === 1;
   }
 
   _toggleAmenitiesFilter(e) {
@@ -152,7 +145,7 @@ export class PageChip extends DemoPage {
       <section class="documentation-section">
         <h3>Interactive demo</h3>
         <p>
-          This demo lets you preview the text field element with various configuration options.
+          This demo lets you preview the chip element with various configuration options.
         </p>
         <arc-interactive-demo
           .states="${demoStates}"
@@ -327,6 +320,18 @@ export class PageChip extends DemoPage {
               <span>Also styled with parts</span>
             </anypoint-chip>
           </div>
+        </div>
+
+        <h3>Custom "close" icon</h3>
+        <p>
+          The close icon can be replaced by other icon by setting
+          <code>removeIcon</code> property. The value must be a <code>SVGTemplateResult</code> from
+          <code>lit-html</code> library.
+        </p>
+        <div class="wrap-horizontal actions">
+          <anypoint-chip .removeIcon="${clearAll}" removable>
+            Custom icon
+          </anypoint-chip>
         </div>
       </section>
     `;
