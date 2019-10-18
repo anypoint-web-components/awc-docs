@@ -68,11 +68,12 @@ class BaseApi {
       corsOptions = { origin: true };
     }
     if (corsOptions) {
-      if (corsOptions.origin) {
-        corsOptions.credentials = true;
-        corsOptions.allowedHeaders = ['Content-Type', 'Authorization'];
-        corsOptions.origin = origin;
-      }
+      corsOptions.credentials = true;
+      corsOptions.allowedHeaders = ['Content-Type', 'Authorization'];
+      corsOptions.origin = origin;
+      // if (corsOptions.origin) {
+      //
+      // }
       callback(null, corsOptions);
     } else {
       callback(new Error('Unrecognized origin'));

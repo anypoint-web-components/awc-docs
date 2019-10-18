@@ -9,7 +9,7 @@ nconf
 // 2. Environment variables
     .env([
     // 'CLOUD_BUCKET',
-      'GCLOUD_PROJECT',
+      'PROJECT_ID',
       'PORT',
       'ANYPOINT_CLIENT_SECRET',
       'ANYPOINT_CLIENT_ID',
@@ -18,7 +18,7 @@ nconf
     .file({ file: path.join(__dirname, 'config.json') })
 // 4. Defaults
     .defaults({
-      GCLOUD_PROJECT: '',
+      PROJECT_ID: '',
       PORT: 8080,
     });
 /**
@@ -32,7 +32,7 @@ function checkConfig(setting) {
 }
 
 // Check for required settings
-checkConfig('GCLOUD_PROJECT');
+checkConfig('PROJECT_ID');
 checkConfig('PORT');
 checkConfig('ANYPOINT_CLIENT_SECRET');
 checkConfig('ANYPOINT_CLIENT_ID');
