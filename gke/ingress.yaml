@@ -1,0 +1,15 @@
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: awc-ingress
+  annotations:
+    kubernetes.io/ingress.global-static-ip-name: awc-www
+    networking.gke.io/managed-certificates: www-certificate
+spec:
+  rules:
+  - host: awc.dev
+    http:
+      paths:
+      - backend:
+          serviceName: awc-www-service
+          servicePort: www-port

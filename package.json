@@ -23,9 +23,7 @@
     "build": "rimraf dist && rollup -c rollup.config.js",
     "start:compatibility": "es-dev-server --app-index index.html --compatibility auto --node-resolve --open --watch",
     "gke:build": "docker build -t gcr.io/anypoint-wc/awc-www:$npm_package_version .",
-    "gke:deploy": "docker -- push gcr.io/anypoint-wc/awc-www:$npm_package_version",
-    "gke:deploy-config": "kubectl apply -f deployment.yaml",
-    "gke:deploy-ingress": "kubectl apply -f app-ingress.yaml"
+    "gke:deploy": "docker -- push gcr.io/anypoint-wc/awc-www:$npm_package_version"
   },
   "devDependencies": {
     "@open-wc/building-rollup": "^0.19.1",
