@@ -18,6 +18,7 @@ export default {
       files: [
         'node_modules/web-animations-js/web-animations-next.min.js',
         'node_modules/web-animations-js/web-animations-next.min.js.map',
+        '3rd_party/prism.js',
         'robots.txt',
         'humans.txt',
         'favicon.ico',
