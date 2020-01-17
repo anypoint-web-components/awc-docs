@@ -16,6 +16,7 @@ import '../../page-checkbox/page-checkbox.js';
 import '../../page-autocomplete/page-autocomplete.js';
 import '../../page-chip/page-chip.js';
 import '../../page-chip-input/page-chip-input.js';
+import '../../page-signin/page-signin.js';
 
 const defaultTitle = 'Anypoint Web Components';
 const gaId = 'UA-145656779-1';
@@ -84,6 +85,11 @@ export class AwcDocs extends routerLinkMixin(routerMixin(LitElement)) {
         name: 'chip-input',
         pattern: 'chip-input',
         data: { title: 'Anypoint Chip Input' },
+      },
+      {
+        name: 'signin',
+        pattern: 'signin',
+        data: { title: 'Anypoint Sing In' },
       },
       {
         name: 'not-found',
@@ -168,6 +174,10 @@ export class AwcDocs extends routerLinkMixin(routerMixin(LitElement)) {
         return html`
           <page-chip-input></page-chip-input>
         `;
+      case 'signin':
+        return html`
+          <page-signin></page-signin>
+        `;
       default:
         return html`
           <p>Page not found try going to <a href="/intro">main page</a></p>
@@ -229,10 +239,16 @@ export class AwcDocs extends routerLinkMixin(routerMixin(LitElement)) {
         'Anypoint Radio Button',
         'Activate for Anypoint Radio Button documentation',
       ],
+      [
+        '/signin',
+        'signin',
+        'Anypoint Sing In',
+        'Activate for Anypoint Sing In documentation',
+      ],
     ];
 
     return states.map(
-      ([href, route, label, ariaLabel]) => html`
+        ([href, route, label, ariaLabel]) => html`
         <anypoint-item role="none" tabindex="-1" @click="${this.__clickPageLink}" route="${route}">
           <a href="${href}" tabindex="-1" role="menuitem" aria-label="${ariaLabel}">
             ${label}
