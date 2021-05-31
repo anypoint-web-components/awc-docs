@@ -1,32 +1,48 @@
-import { createDefaultConfig } from '@open-wc/building-rollup';
+/* eslint-disable import/no-extraneous-dependencies */
+import { createBasicConfig } from '@open-wc/building-rollup';
 import cpy from 'rollup-plugin-cpy';
-// if you need to support IE11 use "modern-and-legacy-config" instead.
-// import { createCompatibilityConfig } from '@open-wc/building-rollup';
-// export default createCompatibilityConfig({ input: './index.html' });
+import merge from 'deepmerge';
+import html from '@open-wc/rollup-plugin-html';
+import polyfillsLoader from '@open-wc/rollup-plugin-polyfills-loader';
 
-const config = createDefaultConfig({ input: './index.html' });
+const outputDir = 'dist';
 
-export default {
-  ...config,
-  output: {
-    ...config.output,
-    sourcemap: false,
-  },
-  plugins: [
-    ...config.plugins,
-    cpy({
-      files: [
-        'node_modules/web-animations-js/web-animations-next.min.js',
-        'node_modules/web-animations-js/web-animations-next.min.js.map',
-        '3rd_party/prism.js',
-        'robots.txt',
-        'humans.txt',
-        'favicon.ico',
-      ],
-      dest: 'dist',
-      options: {
-        parents: true,
-      },
-    }),
-  ],
-};
+const startConfig = createBasicConfig({
+  outputDir,
+  developmentMode: process.env.ROLLUP_WATCH === 'true',
+});
+
+export default [
+  merge(startConfig, {
+    output: {
+      sourcemap: false,
+    },
+    plugins: [
+      html({
+        flatten: true,
+        files: [
+          './index.html',
+        ],
+        minify: true,
+      }),
+      polyfillsLoader({
+        polyfills: {},
+      }),
+
+      cpy({
+        files: [
+          'node_modules/web-animations-js/web-animations-next.min.js',
+          'node_modules/web-animations-js/web-animations-next.min.js.map',
+          '3rd_party/prism.js',
+          'robots.txt',
+          'humans.txt',
+          'favicon.ico',
+        ],
+        dest: outputDir,
+        options: {
+          parents: true,
+        },
+      }),
+    ],
+  }),
+];

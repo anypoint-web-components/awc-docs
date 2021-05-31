@@ -1,12 +1,15 @@
-const express = require('express');
-const { BaseApi } = require('./base-api');
-const logging = require('../lib/logging');
-const bodyParser = require('body-parser');
-const https = require('https');
-const config = require('../config');
+import express from 'express';
+import https from 'https';
+import { BaseApi } from './BaseApi.js';
+import { logger } from '../lib/logging.js';
+import config from '../config.js';
+
+/** @typedef {import('express').Response} Response */
+/** @typedef {import('express').Request} Request */
 
 const router = express.Router();
-router.use(bodyParser.json());
+router.use(express.json());
+export default router;
 
 const apiBase = 'https://anypoint.mulesoft.com/accounts/api';
 const tokenEndpoint = `${apiBase}/v2/oauth2/token`;
@@ -31,8 +34,8 @@ class AuthApiRoute extends BaseApi {
    * The application keeps client secret in K8 secret store and the secret is
    * accessible from kuberneties engine.
    *
-   * @param {Object} req
-   * @param {Object} res
+   * @param {Request} req
+   * @param {Response} res
    */
   async anypointTokenRequest(req, res) {
     const { body } = req;
@@ -65,49 +68,53 @@ class AuthApiRoute extends BaseApi {
       this.sendError(res, e.message);
     }
   }
+
   /**
    * Exchanges code for access token.
-   * @param {String} code Received authrization code
-   * @param {String} cid Client ID.
-   * @param {?String} redirectUri Redirect URI
+   * @param {string} code Received authorization code
+   * @param {string} cid Client ID.
+   * @param {string=} redirectUri Redirect URI
    * @return {Promise}
    */
   async _exchangeTokens(code, cid, redirectUri) {
     const body = this._getTokenExchangeBody(code, cid, redirectUri);
     const headers = {
-      'content-type': 'application/x-www-form-urlencoded'
+      'content-type': 'application/x-www-form-urlencoded',
     };
-    const [mediaType, rawBody] =
-      await this._makeRequest(tokenEndpoint, 'POST', headers, body);
+    const [mediaType, rawBody] = await this._makeRequest(tokenEndpoint, 'POST', headers, body);
     return this._processCodeResponse(rawBody, mediaType);
   }
+
   /**
    * Replaces `-` or `_` with camel case.
-   * @param {String} name The string to process
-   * @return {String|undefined} Camel cased string or `undefined` if not
+   * @param {string} name The string to process
+   * @return {string|undefined} Camel cased string or `undefined` if not
    * transformed.
    */
   _camel(name) {
     let i = 0;
     let l;
     let changed = false;
+    // eslint-disable-next-line no-cond-assign
     while ((l = name[i])) {
       if ((l === '_' || l === '-') && i + 1 < name.length) {
-        name = name.substr(0, i) +
-          name[i + 1].toUpperCase() +
-          name.substr(i + 2);
+        // eslint-disable-next-line no-param-reassign
+        name = name.substr(0, i)
+          + name[i + 1].toUpperCase()
+          + name.substr(i + 2);
         changed = true;
       }
       i++;
     }
     return changed ? name : undefined;
   }
+
   /**
    * Processes token request body and produces map of values.
    *
-   * @param {String} body Body received in the response.
-   * @param {String} contentType Response content type.
-   * @return {Object} Response as an object.
+   * @param {string} body Body received in the response.
+   * @param {string} contentType Response content type.
+   * @return {Response} Response as an object.
    * @throws {Error} Exception when body is invalid.
    */
   _processCodeResponse(body, contentType) {
@@ -139,10 +146,10 @@ class AuthApiRoute extends BaseApi {
 
   /**
    * Creates message body for OAuth token exchange
-   * @param {String} code Received authrization code
-   * @param {String} cid Client ID.
-   * @param {?String} redirectUri Redirect URI
-   * @return {String}
+   * @param {string} code Received authorization code
+   * @param {string} cid Client ID.
+   * @param {string=} redirectUri Redirect URI
+   * @returns {string}
    */
   _getTokenExchangeBody(code, cid, redirectUri) {
     const parts = [];
@@ -159,15 +166,16 @@ class AuthApiRoute extends BaseApi {
       parts[parts.length] = ['client_secret', ''];
     }
     return parts
-        .map(([key, value]) => `${key}=${encodeURIComponent(value)}`)
-        .join('&');
+      .map(([key, value]) => `${key}=${encodeURIComponent(value)}`)
+      .join('&');
   }
+
   /**
    * Makes a request to Anypoint authorization server.
-   * @param {String} url URL to connect to
-   * @param {String} method HTTP method
-   * @param {Object} headers HTTP headers
-   * @param {String} body
+   * @param {string} url URL to connect to
+   * @param {string} method HTTP method
+   * @param {object} headers HTTP headers
+   * @param {string} body
    * @return {Promise}
    */
   _makeRequest(url, method, headers, body) {
@@ -199,7 +207,7 @@ class AuthApiRoute extends BaseApi {
       });
       req.on('error', (e) => {
         reject(e.message);
-        logging.error(e);
+        logger.error(e);
       });
       if (body) {
         req.write(body);
@@ -214,4 +222,3 @@ api.setCors(router);
 api.wrapApi(router, [
   ['/anypoint-token', 'anypointTokenRequest', 'post'],
 ]);
-module.exports = router;

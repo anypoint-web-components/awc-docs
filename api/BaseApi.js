@@ -1,8 +1,13 @@
-const cors = require('cors');
+import cors from 'cors';
+
+/** @typedef {import('express').Response} Response */
+/** @typedef {import('express').Request} Request */
+/** @typedef {import('express').Router} Router */
+
 /**
  * A base class for all API routes
  */
-class BaseApi {
+export class BaseApi {
   /**
    * @constructor
    */
@@ -12,15 +17,16 @@ class BaseApi {
 
   /**
    * Sets CORS on all routes for `OPTIONS` HTTP method.
-   * @param {Object} router Express app.
+   * @param {Router} router Express app.
    */
   setCors(router) {
+    // @ts-ignore
     router.options('*', cors(this._processCors));
   }
 
   /**
    * Shorthand function to register a route on this class.
-   * @param {Object} router Express app.
+   * @param {Router} router Express app.
    * @param {Array<Array<String>>} routes List of routes. Each route is an array
    * where:
    * - index `0` is the API route, eg, `/api/models/:modelId`
@@ -36,49 +42,47 @@ class BaseApi {
       router[method](route[0], cors(this._processCors), clb);
     }
   }
+
   /**
-   * Sends error to the client in a standarized way.
-   * @param {Object} res HTTP response object
+   * Sends error to the client in a standardized way.
+   * @param {Response} res HTTP response object
    * @param {String} message Error message to send.
-   * @param {?Number} status HTTP status code, default to 400.
+   * @param {Number=} [status=400] HTTP status code, default to 400.
    */
-  sendError(res, message, status) {
-    res.status(status || 400).send({
+  sendError(res, message, status = 400) {
+    res.status(status).send({
       error: true,
       message,
     });
   }
+
   /**
-   * Processes CORS headers when for the request
-   * @param {Object} req
+   * Processes CORS request.
+   * @param {Request} req
    * @param {Function} callback
    */
   _processCors(req, callback) {
     const whitelist = [
-      'https://anypoint-web-components.github.io',
-      'https://awc.dev',
+      'https://app.apimodeling.io',
+      'https://apimodeling.io',
     ];
     const origin = req.header('Origin');
     let corsOptions;
     if (!origin) {
       corsOptions = { origin: false };
-    } else if (origin.indexOf('http://localhost:') === 0 || origin.indexOf('http://127.0.0.1:') === 0) {
+    } else if (origin.includes('http://localhost:') || origin.includes('http://127.0.0.1:')) {
       corsOptions = { origin: true };
-    } else if (whitelist.indexOf(origin) !== -1) {
+    } else if (whitelist.includes(origin)) {
       corsOptions = { origin: true };
     }
     if (corsOptions) {
+      // @ts-ignore
       corsOptions.credentials = true;
-      corsOptions.allowedHeaders = ['Content-Type', 'Authorization'];
+      // @ts-ignore
+      corsOptions.allowedHeaders = ['Content-Type', 'Authorization', 'Origin'];
+      // @ts-ignore
       corsOptions.origin = origin;
-      // if (corsOptions.origin) {
-      //
-      // }
-      callback(null, corsOptions);
-    } else {
-      callback(new Error('Unrecognized origin'));
     }
+    callback(null, corsOptions);
   }
 }
-
-module.exports.BaseApi = BaseApi;

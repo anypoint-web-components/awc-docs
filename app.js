@@ -1,27 +1,30 @@
-/* eslint global-require: 0 */
-/* eslint no-empty: 0 */
-/* eslint no-console: 0 */
+/* eslint-disable arrow-body-style */
+import { start as traceStart } from '@google-cloud/trace-agent';
+import { start as debugStart } from '@google-cloud/debug-agent';
+import express from 'express';
+import compression from 'compression';
+import path from 'path';
+import fs from 'fs';
+import serveStatic from 'serve-static';
+import config from './config.js';
+import { requestLogger, errorLogger, logger } from './lib/logging.js';
+import { requiresHttpsRedirect } from './lib/Utils.js';
+import ApiRoute from './api/index.js';
 
-// Activate Google Cloud Trace and Debug when in production
-if (process.env.NODE_ENV === 'production') {
-  try {
-    require('@google-cloud/trace-agent').start();
-    require('@google-cloud/debug-agent').start();
-  } catch (_) {}
+const IS_PRODUCTION = config.get('NODE_ENV') === 'production';
+
+if (IS_PRODUCTION) {
+  traceStart();
+  debugStart();
 }
 
-const express = require('express');
-const compression = require('compression');
-const fs = require('fs');
-const path = require('path');
-const config = require('./config');
-const logging = require('./lib/logging');
-
 const app = express();
+export default app;
+
 app.disable('etag');
 app.disable('x-powered-by');
-app.set('trust proxy', true);
-app.use(logging.requestLogger);
+app.set('trust proxy', 1);
+app.use(requestLogger);
 app.use(compression());
 app.use(express.static('dist'));
 
@@ -29,28 +32,67 @@ app.get('/_ah/health', (req, res) => {
   res.status(200).send('ok');
 });
 
-app.use('/api/v1', require('./api'));
-
-app.get('*', (req, res) => {
-  const index = path.join('dist', 'index.html');
-  fs.readFile(index, 'utf8', (err, data) => {
-    if (err) {
-      res.status(500).send({
-        error: 'Unable to read index file',
-      });
-    } else {
-      res.set('Content-Type', 'text/html');
-      res.send(data);
+// recognizes (?) http traffic and redirects it to HTTPS.
+app.use((req, res, next) => {
+  try {
+    if (requiresHttpsRedirect(req)) {
+      const { host } = req.headers;
+      const newUrl = `https://${host}${req.url}`;
+      res.redirect(301, newUrl);
+      return;
     }
-  });
+  } catch (e) {
+    // ...
+  }
+  next();
 });
 
-if (module === require.main) {
-  // Start the server
-  const server = app.listen(config.get('PORT'), () => {
-    const { port } = server.address();
-    console.log(`App is listening on port ${port}`);
-  });
-}
+// API
+app.use('/api/v1/', ApiRoute);
 
-module.exports = app;
+const buildServe = serveStatic('dist', {
+  extensions: ['html'],
+});
+
+/**
+ * @param {express.Request} req
+ * @param {express.Response} res
+ */
+const demoDev = (req, res) => {
+  return () => {
+    const index = path.join('dist', 'index.html');
+    fs.readFile(index, 'utf8', (err, data) => {
+      if (err) {
+        res.status(500).send({
+          error: 'Unable to read demo app index file',
+        });
+      } else {
+        res.set('Content-Type', 'text/html');
+        res.send(data);
+      }
+    });
+  };
+};
+
+app.get('*', (req, res) => {
+  buildServe(req, res, demoDev(req, res));
+});
+
+// Add the error logger after all middleware and routes so that
+// it can log errors from the whole application. Any custom error
+// handlers should go after this.
+app.use(errorLogger);
+
+let serverResolve;
+export const serverStartPromise = new Promise((resolve) => {
+  serverResolve = resolve;
+});
+
+const server = app.listen(config.get('PORT'), () => {
+  // @ts-ignore
+  const { port } = server.address();
+  logger.info(`App listening on port ${port}`);
+  serverResolve();
+});
+
+export { server };

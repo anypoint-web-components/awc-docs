@@ -4,6 +4,7 @@ import '@anypoint-web-components/anypoint-radio-button/anypoint-radio-button.js'
 import '@anypoint-web-components/anypoint-radio-button/anypoint-radio-group.js';
 import '@anypoint-web-components/anypoint-signin/anypoint-signin.js';
 import '@polymer/paper-toast/paper-toast.js';
+import { AnypointCodeExchangeEventType, AnypointSignedInErrorType } from '@anypoint-web-components/anypoint-signin';
 import { DemoPage } from '../../demo-page/demo-page.js';
 import { demoContentStyles, headersStyles } from '../../awc-docs/src/common-styles.js';
 import prismStyles from '../../awc-docs/src/prism-styles.js';
@@ -12,6 +13,11 @@ import litExample from './lit-example.js';
 import htmlCodeExample from './html-code-example.js';
 import litCodeExample from './lit-code-example.js';
 import nodeCodeExample from './node-server-example.js';
+
+/** @typedef {import('@anypoint-web-components/anypoint-signin').AnypointCodeExchangeEvent} AnypointCodeExchangeEvent */
+/** @typedef {import('@anypoint-web-components/anypoint-signin').AnypointSigninElement} AnypointSigninElement */
+/** @typedef {import('@polymer/paper-toast').PaperToastElement} PaperToastElement */
+/** @typedef {import('@advanced-rest-client/arc-types').Authorization.TokenInfo} TokenInfo */
 
 const apiBase = 'https://awc.dev/api/v1';
 const tokenUri = `${apiBase}/auth/anypoint-token`;
@@ -58,8 +64,8 @@ export class PageSignin extends DemoPage {
 
     this._oauth2CodeHandler = this._oauth2CodeHandler.bind(this);
     this._errorHandler = this._errorHandler.bind(this);
-    window.addEventListener('oauth2-code-response', this._oauth2CodeHandler);
-    window.addEventListener('anypoint-signin-aware-error', this._errorHandler);
+    window.addEventListener(AnypointCodeExchangeEventType, this._oauth2CodeHandler);
+    window.addEventListener(AnypointSignedInErrorType, this._errorHandler);
   }
 
   _mainDemoStateHandler(e) {
@@ -80,29 +86,40 @@ export class PageSignin extends DemoPage {
     this.buttonWidth = value;
   }
 
-  _signedinChangedHandler(e) {
-    const { value } = e.detail;
+  /**
+   * @param {Event} e
+   */
+  _signedInChangedHandler(e) {
+    const value = /** @type AnypointSigninElement */ (e.target).signedIn;
     this.status = String(value);
   }
 
+  /**
+   * @param {AnypointCodeExchangeEvent} e
+   */
   _oauth2CodeHandler(e) {
-    const { code } = e.detail;
+    const { code } = e;
     this.code = code;
-    setTimeout(() => this._exchangeCode(code));
+    e.preventDefault();
+    e.detail.result = this._exchangeCode(code);
   }
 
+  /**
+   * @param {string} code
+   * @returns {Promise<TokenInfo>}
+   */
   async _exchangeCode(code) {
     const body = {
       code,
       redirectUri: this.redirectUri,
-      clientId: this.clientId
+      clientId: this.clientId,
     };
     const init = {
       method: 'POST',
       body: JSON.stringify(body),
       headers: {
-        'content-type': 'application/json'
-      }
+        'content-type': 'application/json',
+      },
     };
     try {
       const response = await fetch(tokenUri, init);
@@ -110,26 +127,41 @@ export class PageSignin extends DemoPage {
       if (response.ok) {
         this.accessToken = data.data.accessToken;
       } else {
-        this._toastEreror(data.message);
+        throw new Error('No token response received');
       }
+      return {
+        accessToken: data.data.accessToken,
+        expiresAt: 0,
+        expiresIn: data.data.expiresIn,
+        expiresAssumed: true,
+        state: '0',
+      };
     } catch (e) {
-      this._toastEreror(e.message);
+      this._toastError(e.message);
+      throw e;
     }
   }
 
-  _toastEreror(message) {
-    const toast = document.getElementById('errorToast');
+  /**
+   * @param {string} message
+   */
+  _toastError(message) {
+    const toast = /** @type PaperToastElement */ (this.shadowRoot.querySelector('#errorToast'));
     toast.text = message;
     toast.opened = true;
   }
 
+  /**
+   * @param {CustomEvent} e
+   */
   _errorHandler(e) {
-    const { message } = e.detail;
-    this._toastEreror(message);
+    this._toastError(e.detail);
   }
 
   _demoTemplate() {
-    const { demoStates, darkThemeActive, buttonWidth, scopes, redirectUri, clientId, status, code, accessToken } = this;
+    const {
+      demoStates, darkThemeActive, buttonWidth, scopes, redirectUri, clientId, status, code, accessToken,
+    } = this;
     return html`
       <section class="documentation-section">
         <h3>Interactive demo</h3>
@@ -147,8 +179,9 @@ export class PageSignin extends DemoPage {
             .scopes="${scopes}"
             .redirectUri="${redirectUri}"
             slot="content"
-            @signedin-changed="${this._signedinChangedHandler}"
+            @signedinchange="${this._signedInChangedHandler}"
           ></anypoint-signin>
+          
 
           <label slot="options" id="listTypeLabel">List type</label>
 
@@ -173,13 +206,13 @@ export class PageSignin extends DemoPage {
               You should exchange this code for an access token.
             </p>
             <p>
-              Once exchanged, you can set the button signedIn attribute to true so that the button becomes a signout
+              Once exchanged, you can set the button signedIn attribute to true so that the button becomes a sign out
               button.
             </p>
             <p>
               You can also just remove the button at this point or go to the next page in your flow.
             </p>
-          `: ''}
+          ` : ''}
         </section>
       </section>
     `;
@@ -257,6 +290,7 @@ export class PageSignin extends DemoPage {
     if (!this._initialized) {
       this._initialized = true;
       /* global Prism */
+      // @ts-ignore
       setTimeout(() => Prism.highlightAllUnder(this.shadowRoot));
     }
     return html`
